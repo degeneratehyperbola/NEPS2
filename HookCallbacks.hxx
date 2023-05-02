@@ -8,29 +8,31 @@
 
 #include "Globals.hxx"
 
-HRESULT WINAPI PresentCallback(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
+namespace Callbacks
 {
-	[[maybe_unused]] static const auto init = [](IDXGISwapChain* pSwapChain)
+	HRESULT WINAPI Present(IDXGISwapChain* pSwapChain, UINT syncInterval, UINT flags)
 	{
-		ID3D11Device* pDevice = nullptr;
-		ID3D11DeviceContext* pDeviceContext = nullptr;
+		HRESULT hr = g_hmPresent.CallOriginal<HRESULT>(pSwapChain, syncInterval, flags);
 
-		pSwapChain->GetDevice(__uuidof(ID3D11Device), reinterpret_cast<void**>(&pDevice));
-		pDevice->GetImmediateContext(&pDeviceContext);
-		
-		ImGui_ImplDX11_Init(pDevice, pDeviceContext);
+		ImGui_ImplDX11_NewFrame();
 
-		return true;
-	}(pSwapChain);
+		ImGui::ShowDemoWindow();
 
-	HRESULT hr = Hooks::g_hmPresentHook.CallOriginal<HRESULT>(pSwapChain, SyncInterval, Flags);
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-	ImGui_ImplDX11_NewFrame();
+		return hr;
+	}
 
-	ImGui::ShowDemoWindow();
+	HRESULT WINAPI ResizeBuffers(IDXGISwapChain* pSwapChain, UINT bufferCount, UINT w, UINT h, DXGI_FORMAT newFormat, UINT flags)
+	{
+		HRESULT hr = g_hmResizeBuffers.CallOriginal<HRESULT>(pSwapChain, bufferCount, w, h, newFormat, flags);
 
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+		ImGui_ImplDX11_InvalidateDeviceObjects();
 
-	return hr;
+		if (SUCCEEDED(hr))
+			ImGui_ImplDX11_CreateDeviceObjects();
+
+		return hr;
+	}
 }
