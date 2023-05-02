@@ -2,6 +2,7 @@
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_dx11.h>
+#include <imgui/imgui_impl_win32.h>
 
 #include "Globals.hxx"
 #include "MemoryTools.hxx"
@@ -28,8 +29,9 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 		pDevice->GetImmediateContext(&pDeviceContext);
 		
 		ImGui_ImplDX11_Init(pDevice, pDeviceContext);
+		ImGui_ImplWin32_Init(g_hWnd);
 
-		// Setup our hooking method		
+		// Setup our hooking method
 		if (!HookManager::Setup())
 			return FALSE;
 
@@ -37,6 +39,8 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 		auto pSwapChainVtable = GET_VTABLE(g_pSwapChain);
 		g_hmPresent = HookManager(pSwapChainVtable[8], Callbacks::Present);
 		g_hmResizeBuffers = HookManager(pSwapChainVtable[13], Callbacks::ResizeBuffers);
+
+		g_pOriginalWndProc = (WNDPROC)SetWindowLongPtrW(g_hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(Callbacks::WndProc));
 
 		g_hmPresent.Hook();
 		g_hmResizeBuffers.Hook();

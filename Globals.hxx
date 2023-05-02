@@ -9,5 +9,6 @@ extern HMODULE g_hModule;
 extern HWND g_hWnd;
 extern IDXGISwapChain* g_pSwapChain;
 
+extern WNDPROC g_pOriginalWndProc;
 extern HookManager g_hmPresent;
 extern HookManager g_hmResizeBuffers;
