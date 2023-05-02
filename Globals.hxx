@@ -5,13 +5,9 @@
 
 #include "HookManager.hxx"
 
-namespace Hooks
-{
-	extern HMODULE g_hModule;
-	extern HookManager g_hmPresentHook;
-}
+extern HMODULE g_hModule;
+extern HWND g_hWnd;
+extern IDXGISwapChain* g_pSwapChain;
 
-namespace Memory
-{
-	extern void* g_pPresent;
-}
+extern HookManager g_hmPresent;
+extern HookManager g_hmResizeBuffers;

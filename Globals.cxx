@@ -1,12 +1,7 @@
 #include "Globals.hxx"
 
-namespace Hooks
-{
-	HMODULE g_hModule = nullptr;
-	HookManager g_hmPresentHook;
-}
+HMODULE g_hModule = nullptr;
+HWND g_hWnd = nullptr;
+IDXGISwapChain* g_pSwapChain = nullptr;
 
-namespace Memory
-{
-	void* g_pPresent;
-}
+HookManager g_hmPresentHook;
