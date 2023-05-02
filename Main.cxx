@@ -36,11 +36,11 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 			return FALSE;
 
 		// Hook interesting functions
-		auto pSwapChainVtable = GET_VTABLE(g_pSwapChain);
-		g_hmPresent = HookManager(pSwapChainVtable[8], Callbacks::Present);
-		g_hmResizeBuffers = HookManager(pSwapChainVtable[13], Callbacks::ResizeBuffers);
-
 		g_pOriginalWndProc = (WNDPROC)SetWindowLongPtrW(g_hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(Callbacks::WndProc));
+
+		auto swapChainVtable = GET_VTABLE(g_pSwapChain);
+		g_hmPresent = HookManager(swapChainVtable[8], Callbacks::Present);
+		g_hmResizeBuffers = HookManager(swapChainVtable[13], Callbacks::ResizeBuffers);
 
 		g_hmPresent.Hook();
 		g_hmResizeBuffers.Hook();
