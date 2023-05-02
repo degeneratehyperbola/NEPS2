@@ -16,7 +16,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 	case DLL_PROCESS_ATTACH:
 		// Initialize globals
 		g_hModule = hModule;
-		g_hWnd = FindWindowW(L"Valve001", nullptr);
+		g_hWnd = FindWindowA(nullptr, "Counter-Strike 2");
 		g_pSwapChain = MemorySearch::RelativeToAbsolute<decltype(g_pSwapChain)>(MemorySearch::FindPattern("rendersystemdx11.dll", "66 0F 7F 05 ? ? ? ? 66 0F 7F 0D ? ? ? ? 48 89 35 ? ? ? ?"));
 
 		// Setup ImGui
