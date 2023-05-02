@@ -4,8 +4,16 @@
 #include <Psapi.h>
 #include <vector>
 
+#define GET_VTABLE(obj) (*reinterpret_cast<void***>(obj))
+
 namespace MemorySearch
 {
+	template<typename T>
+	constexpr T RelativeToAbsolute(void* address)
+	{
+		return (T)(address + *reinterpret_cast<int*>(address) + 4);
+	}
+
 	std::vector<byte> PatternToBytes(const char* pattern)
 	{
 		std::vector<byte> bytes;
