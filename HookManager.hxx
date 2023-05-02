@@ -18,9 +18,9 @@ public:
 
 	template<typename T, typename C>
 	HookManager(T* pTarget, C* pCallback)
-		: m_pTarget{pTarget}
-		, m_pCallback{pCallback}
-		, m_pTrampoline{nullptr}
+		: m_pTarget{ pTarget }
+		, m_pCallback{ pCallback }
+		, m_pTrampoline{ nullptr }
 	{
 		// Use Hook() to initialize
 	}

@@ -26,6 +26,7 @@ namespace Callbacks
 	HRESULT WINAPI ResizeBuffers(IDXGISwapChain* pSwapChain, UINT bufferCount, UINT w, UINT h, DXGI_FORMAT newFormat, UINT flags)
 	{
 		ImGui_ImplDX11_InvalidateDeviceObjects();
+
 		return g_hmResizeBuffers.CallOriginal<HRESULT>(pSwapChain, bufferCount, w, h, newFormat, flags);
 	}
 
@@ -33,6 +34,9 @@ namespace Callbacks
 	{
 		extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
 		ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
+
+		if (uMsg == WM_KEYDOWN && wParam == VK_END)
+			FreeLibrary(g_hModule);
 
 		return CallWindowProcW(g_pOriginalWndProc, hWnd, uMsg, wParam, lParam);
 	}

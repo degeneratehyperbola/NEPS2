@@ -27,7 +27,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 
 		g_pSwapChain->GetDevice(__uuidof(ID3D11Device), reinterpret_cast<void**>(&pDevice));
 		pDevice->GetImmediateContext(&pDeviceContext);
-		
+
 		ImGui_ImplDX11_Init(pDevice, pDeviceContext);
 		ImGui_ImplWin32_Init(g_hWnd);
 
@@ -51,7 +51,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 		SetWindowLongPtrW(g_hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(g_pOriginalWndProc));
 		g_hmResizeBuffers.Unhook();
 		g_hmPresent.Unhook();
-		
+
 		// Cleanup after ourselves
 		HookManager::Cleanup();
 
