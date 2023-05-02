@@ -16,10 +16,11 @@ public:
 		MH_Uninitialize();
 	}
 
-	HookManager(void* pFunction, void* pCallback)
-		: m_pFunction(pFunction)
-		, m_pCallback(pCallback)
-		, m_pTrampoline(nullptr)
+	template<typename T, typename C>
+	HookManager(T* pTarget, C* pCallback)
+		: m_pTarget{pTarget}
+		, m_pCallback{pCallback}
+		, m_pTrampoline{nullptr}
 	{
 		// Use Hook() to initialize
 	}
@@ -31,10 +32,10 @@ public:
 
 	bool Hook()
 	{
-		if (MH_CreateHook(m_pFunction, m_pCallback, &m_pTrampoline) != MH_OK)
+		if (MH_CreateHook(m_pTarget, m_pCallback, &m_pTrampoline) != MH_OK)
 			return false;
 
-		if (MH_EnableHook(m_pFunction) != MH_OK)
+		if (MH_EnableHook(m_pTarget) != MH_OK)
 			return false;
 
 		return true;
@@ -44,8 +45,8 @@ public:
 	{
 		if (m_pTrampoline != nullptr)
 		{
-			MH_DisableHook(m_pFunction);
-			MH_RemoveHook(m_pFunction);
+			MH_DisableHook(m_pTarget);
+			MH_RemoveHook(m_pTarget);
 			m_pTrampoline = nullptr;
 		}
 	}
@@ -58,7 +59,7 @@ public:
 	}
 
 private:
-	void* m_pFunction;
+	void* m_pTarget;
 	void* m_pCallback;
 	void* m_pTrampoline;
 };
