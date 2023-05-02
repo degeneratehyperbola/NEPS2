@@ -48,6 +48,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 		break;
 	case DLL_PROCESS_DETACH:
 		// Unhook hooked hooks
+		SetWindowLongPtrW(g_hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(g_pOriginalWndProc));
 		g_hmResizeBuffers.Unhook();
 		g_hmPresent.Unhook();
 		
@@ -57,7 +58,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 		// Cleanup ImGui
 		ImGui_ImplDX11_Shutdown();
 		ImGui::DestroyContext();
-		
+
 		break;
 	}
 	return TRUE;
