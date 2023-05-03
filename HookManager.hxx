@@ -9,6 +9,8 @@ public:
 	{
 		if (MH_Initialize() != MH_OK)
 			return false;
+		
+		return true;
 	}
 
 	static void Cleanup()
@@ -16,10 +18,12 @@ public:
 		MH_Uninitialize();
 	}
 
+	HookManager() = default;
+
 	template<typename T, typename C>
 	HookManager(T* pTarget, C* pCallback)
-		: m_pTarget{ pTarget }
-		, m_pCallback{ pCallback }
+		: m_pTarget{ reinterpret_cast<void*>(pTarget) }
+		, m_pCallback{ reinterpret_cast<void*>(pCallback) }
 		, m_pTrampoline{ nullptr }
 	{
 		// Use Hook() to initialize
@@ -32,6 +36,8 @@ public:
 
 	bool Hook()
 	{
+		if (!m_pTarget || !m_pCallback) return false;
+
 		if (MH_CreateHook(m_pTarget, m_pCallback, &m_pTrampoline) != MH_OK)
 			return false;
 
