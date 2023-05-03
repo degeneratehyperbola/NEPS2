@@ -4,8 +4,7 @@
 		{
 			"label": "Build ${workspaceFolderBasename} in Release",
 			"type": "shell",
-			"command": "gcc *.cxx -I include -O3 -o ./build/${workspaceFolderBasename}.dll",
-			"problemMatcher": [],
+			"command": "g++ -m64 -shared -O3 -o $(Get-ChildItem -Include *.cpp, *.c, *.cxx -File -Recurse | ForEach-Object $_.FullName) -ld3d11 -lDxgi -lD3dcompiler_47 -I include -o ./build/${workspaceFolderBasename}.dll",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -14,8 +13,7 @@
 		{
 			"label": "Build ${workspaceFolderBasename} in Debug",
 			"type": "shell",
-			"command": "gcc *.c -I include -g -Og -o ./build/${workspaceFolderBasename}.dll",
-			"problemMatcher": [],
+			"command": "g++ -m64 -shared -g -Og -o $(Get-ChildItem -Include *.cpp, *.c, *.cxx -File -Recurse | ForEach-Object $_.FullName) -ld3d11 -lDxgi -lD3dcompiler_47 -I include -o ./build/${workspaceFolderBasename}.dll",
 			"group": {
 				"kind": "build",
 			}
