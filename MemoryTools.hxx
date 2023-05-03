@@ -16,9 +16,9 @@ public:
 namespace MemorySearch
 {
 	template<typename T>
-	constexpr T RelativeToAbsolute(uintptr_t address)
+	constexpr T* RelativeToAbsolute(uintptr_t address)
 	{
-		return reinterpret_cast<T>(address + *reinterpret_cast<int*>(address) + 4);
+		return reinterpret_cast<T*>(address + *reinterpret_cast<int*>(address) + 4);
 	}
 
 	std::vector<byte> PatternToBytes(const char* pattern)
@@ -29,7 +29,7 @@ namespace MemorySearch
 			if (*cursor == ' ')
 				continue;
 
-			bytes.push_back(static_cast<byte>(std::strtoul(cursor, const_cast<char**>(&cursor), 16)));
+			bytes.push_back((byte)std::strtoul(cursor, const_cast<char**>(&cursor), 16));
 		}
 
 		return bytes;
@@ -55,8 +55,8 @@ namespace MemorySearch
 
 		const auto patternBytes = PatternToBytes(pattern);
 		const auto patternMask = PatternToMask(pattern);
-		const auto moduleBase = reinterpret_cast<byte*>(moduleInfo.lpBaseOfDll);
-		const auto moduleSize = static_cast<size_t>(moduleInfo.SizeOfImage);
+		const auto moduleBase = (byte*)moduleInfo.lpBaseOfDll;
+		const auto moduleSize = (size_t)moduleInfo.SizeOfImage;
 		const auto end = moduleBase + moduleSize - patternBytes.size();
 		for (byte* currentByte = moduleBase; currentByte < end; ++currentByte)
 		{

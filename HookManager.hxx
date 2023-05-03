@@ -22,8 +22,8 @@ public:
 
 	template<typename T, typename C>
 	HookManager(T* pTarget, C* pCallback)
-		: m_pTarget{ reinterpret_cast<void*>(pTarget) }
-		, m_pCallback{ reinterpret_cast<void*>(pCallback) }
+		: m_pTarget{ (void*)pTarget }
+		, m_pCallback{ (void*)pCallback }
 		, m_pTrampoline{ nullptr }
 	{
 		// Use Hook() to initialize
