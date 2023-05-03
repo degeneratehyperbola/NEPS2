@@ -4,8 +4,6 @@
 #include <Psapi.h>
 #include <vector>
 
-#define _STUPID_PREPROCESSOR_CONCAT(a, b) a##b
-#define _CONCAT(a, b) _STUPID_PREPROCESSOR_CONCAT(a, b)
 #define PAD(size) \
 private: \
     byte _CONCAT(_pad, __COUNTER__)[size]; \
