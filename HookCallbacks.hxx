@@ -9,6 +9,8 @@
 
 #include "Globals.hxx"
 
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
+
 namespace Callbacks
 {
 	HRESULT WINAPI Present(IDXGISwapChain* pSwapChain, UINT syncInterval, UINT flags)
@@ -32,7 +34,6 @@ namespace Callbacks
 
 	LRESULT WINAPI WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
 		ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 
 		if (uMsg == WM_KEYDOWN && wParam == VK_END)
