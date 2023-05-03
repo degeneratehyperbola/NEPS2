@@ -14,6 +14,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 	switch (ulReasonForCall)
 	{
 	case DLL_PROCESS_ATTACH:
+	{
 		// Initialize globals
 		g_hModule = hModule;
 		g_hWnd = FindWindowA(nullptr, "Counter-Strike 2");
@@ -46,7 +47,9 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 		g_hmResizeBuffers.Hook();
 
 		break;
+	}
 	case DLL_PROCESS_DETACH:
+	{
 		// Unhook hooked hooks
 		SetWindowLongPtrW(g_hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(g_pOriginalWndProc));
 		g_hmResizeBuffers.Unhook();
@@ -61,6 +64,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 		ImGui::DestroyContext();
 
 		break;
+	}
 	}
 	return TRUE;
 }
