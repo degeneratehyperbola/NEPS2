@@ -1,0 +1,24 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build ${workspaceFolderBasename} in Release",
+			"type": "shell",
+			"command": "gcc *.cxx -I include -O3 -o ./build/${workspaceFolderBasename}.dll",
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Build ${workspaceFolderBasename} in Debug",
+			"type": "shell",
+			"command": "gcc *.c -I include -g -Og -o ./build/${workspaceFolderBasename}.dll",
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+			}
+		}
+	]
+}
