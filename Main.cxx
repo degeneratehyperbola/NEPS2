@@ -3,9 +3,9 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_dx11.h>
 #include <imgui/imgui_impl_win32.h>
+#include <MemoryTools.hxx>
 
 #include "Globals.hxx"
-#include "MemoryTools.hxx"
 #include "HookCallbacks.hxx"
 
 // DLL entry point
@@ -74,7 +74,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 
 		// Cleanup ImGui
 		if (g_bIsUsingVulkan)
-			{} // TODO Vulkan support
+			; // TODO Vulkan support
 		else
 			ImGui_ImplDX11_Shutdown();
 

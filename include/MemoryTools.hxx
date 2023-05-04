@@ -77,7 +77,7 @@ namespace MemorySearch
 			const size_t sz = strlen(pattern) + strlen(moduleName) + 100;
 			char* text = new char[sz];
 			sprintf_s(text, sz, "%s at %p :: %s", moduleName, moduleBase, pattern);
-			MessageBoxA(g_hWnd, pattern, "Pattern not found!", MB_ICONERROR | MB_OK);
+			MessageBoxA(nullptr, pattern, "NEPS2 | Pattern not found!", MB_ICONERROR | MB_OK);
 			delete[] text;
 		}
 
