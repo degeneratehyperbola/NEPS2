@@ -22,14 +22,14 @@ namespace Callbacks
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-		return g_hmPresent.CallOriginal<HRESULT>(pSwapChain, syncInterval, flags);
+		return g_hkPresent.CallOriginal<HRESULT>(pSwapChain, syncInterval, flags);
 	}
 
 	HRESULT WINAPI ResizeBuffers(IDXGISwapChain* pSwapChain, UINT bufferCount, UINT w, UINT h, DXGI_FORMAT newFormat, UINT flags)
 	{
 		ImGui_ImplDX11_InvalidateDeviceObjects();
 
-		return g_hmResizeBuffers.CallOriginal<HRESULT>(pSwapChain, bufferCount, w, h, newFormat, flags);
+		return g_hkResizeBuffers.CallOriginal<HRESULT>(pSwapChain, bufferCount, w, h, newFormat, flags);
 	}
 
 	LRESULT WINAPI WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

@@ -7,8 +7,10 @@
 
 extern HMODULE g_hModule;
 extern HWND g_hWnd;
+
+extern bool g_bIsUsingVulkan;
 extern IDXGISwapChain* g_pSwapChain;
 
 extern WNDPROC g_pOriginalWndProc;
-extern HookManager g_hmPresent;
-extern HookManager g_hmResizeBuffers;
+extern HookManager g_hkPresent;
+extern HookManager g_hkResizeBuffers;

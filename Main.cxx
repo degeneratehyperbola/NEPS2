@@ -18,7 +18,16 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 		// Initialize globals
 		g_hModule = hModule;
 		g_hWnd = FindWindowA(nullptr, "Counter-Strike 2");
-		g_pSwapChain = MemorySearch::RelativeToAbsolute<IDXGISwapChain>(MemorySearch::FindPattern("rendersystemdx11.dll", "66 0F 7F 05 ? ? ? ? 66 0F 7F 0D ? ? ? ? 48 89 35 ? ? ? ?"));
+
+		g_bIsUsingVulkan = GetModuleHandleA("rendersystemvulkan.dll");
+
+		if (g_bIsUsingVulkan)
+		{
+			// TODO Vulkan support
+		} else
+		{
+			g_pSwapChain = MemorySearch::RelativeToAbsolute<IDXGISwapChain*>(MemorySearch::FindPattern("rendersystemdx11.dll", "66 0F 7F 05 ? ? ? ? 66 0F 7F 0D ? ? ? ? 48 89 35 ? ? ? ?") + 4);
+		}
 
 		// Setup ImGui
 		ImGui::CreateContext();
@@ -29,7 +38,11 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 		g_pSwapChain->GetDevice(__uuidof(ID3D11Device), (void**)&pDevice);
 		pDevice->GetImmediateContext(&pDeviceContext);
 
-		ImGui_ImplDX11_Init(pDevice, pDeviceContext);
+		if (g_bIsUsingVulkan)
+			{} // TODO Vulkan support
+		else
+			ImGui_ImplDX11_Init(pDevice, pDeviceContext);
+		
 		ImGui_ImplWin32_Init(g_hWnd);
 
 		// Setup our hooking method
@@ -40,11 +53,11 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 		g_pOriginalWndProc = (WNDPROC)SetWindowLongPtrW(g_hWnd, GWLP_WNDPROC, (LONG_PTR)Callbacks::WndProc);
 
 		auto swapChainVtable = GET_VTABLE(g_pSwapChain);
-		g_hmPresent = HookManager(swapChainVtable[8], Callbacks::Present);
-		g_hmResizeBuffers = HookManager(swapChainVtable[13], Callbacks::ResizeBuffers);
+		g_hkPresent = HookManager(swapChainVtable[8], Callbacks::Present);
+		g_hkResizeBuffers = HookManager(swapChainVtable[13], Callbacks::ResizeBuffers);
 
-		g_hmPresent.Hook();
-		g_hmResizeBuffers.Hook();
+		g_hkPresent.Hook();
+		g_hkResizeBuffers.Hook();
 
 		break;
 	}
@@ -52,14 +65,18 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 	{
 		// Unhook hooked hooks
 		SetWindowLongPtrW(g_hWnd, GWLP_WNDPROC, (LONG_PTR)g_pOriginalWndProc);
-		g_hmResizeBuffers.Unhook();
-		g_hmPresent.Unhook();
+		g_hkResizeBuffers.Unhook();
+		g_hkPresent.Unhook();
 
 		// Cleanup after ourselves
 		HookManager::Cleanup();
 
 		// Cleanup ImGui
-		ImGui_ImplDX11_Shutdown();
+		if (g_bIsUsingVulkan)
+			{} // TODO Vulkan support
+		else
+			ImGui_ImplDX11_Shutdown();
+
 		ImGui_ImplWin32_Shutdown();
 		ImGui::DestroyContext();
 
