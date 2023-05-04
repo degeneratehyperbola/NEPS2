@@ -14,9 +14,9 @@ public:
 namespace MemorySearch
 {
 	template<typename T>
-	constexpr T* RelativeToAbsolute(uintptr_t address)
+	constexpr T RelativeToAbsolute(uintptr_t address)
 	{
-		return reinterpret_cast<T*>(address + *reinterpret_cast<int*>(address) + 4);
+		return reinterpret_cast<T>(address + *reinterpret_cast<int32_t*>(address) + 4);
 	}
 
 	std::vector<byte> PatternToBytes(const char* pattern)
@@ -70,6 +70,15 @@ namespace MemorySearch
 
 			if (match)
 				return reinterpret_cast<uintptr_t>(currentByte);
+		}
+
+		if (reportNotFound)
+		{
+			const size_t sz = strlen(pattern) + strlen(moduleName) + 100;
+			char* text = new char[sz];
+			sprintf_s(text, sz, "%s at %p :: %s", moduleName, moduleBase, pattern);
+			MessageBoxA(g_hWnd, pattern, "Pattern not found!", MB_ICONERROR | MB_OK);
+			delete[] text;
 		}
 
 		return 0;
