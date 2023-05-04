@@ -54,7 +54,7 @@ namespace MemorySearch
 		const auto patternBytes = PatternToBytes(pattern);
 		const auto patternMask = PatternToMask(pattern);
 		const auto moduleBase = (byte*)moduleInfo.lpBaseOfDll;
-		const auto moduleSize = (size_t)moduleInfo.SizeOfImage;
+		const auto moduleSize = (ptrdiff_t)moduleInfo.SizeOfImage;
 		const auto end = moduleBase + moduleSize - patternBytes.size();
 		for (byte* currentByte = moduleBase; currentByte < end; ++currentByte)
 		{
