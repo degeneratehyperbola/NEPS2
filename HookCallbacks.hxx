@@ -31,7 +31,7 @@ namespace Callbacks
 	// Called when the game's window is resized
 	HRESULT WINAPI ResizeBuffers(IDXGISwapChain* pSwapChain, UINT bufferCount, UINT w, UINT h, DXGI_FORMAT newFormat, UINT flags)
 	{
-		ImGui_ImplDX11_InvalidateDeviceObjects();
+		ImGui_ImplDX11_InvalidateDeviceObjects(); // Device objects are recreated at the next ImGui_ImplDX11_NewFrame call
 
 		return g_hkResizeBuffers.CallOriginal<HRESULT>(pSwapChain, bufferCount, w, h, newFormat, flags);
 	}
