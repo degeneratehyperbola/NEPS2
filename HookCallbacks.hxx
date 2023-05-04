@@ -13,6 +13,7 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
 
 namespace Callbacks
 {
+	// Called each render frame
 	HRESULT WINAPI Present(IDXGISwapChain* pSwapChain, UINT syncInterval, UINT flags)
 	{
 		ImGui_ImplDX11_NewFrame();
@@ -27,6 +28,7 @@ namespace Callbacks
 		return g_hkPresent.CallOriginal<HRESULT>(pSwapChain, syncInterval, flags);
 	}
 
+	// Called when the game's window is resized
 	HRESULT WINAPI ResizeBuffers(IDXGISwapChain* pSwapChain, UINT bufferCount, UINT w, UINT h, DXGI_FORMAT newFormat, UINT flags)
 	{
 		ImGui_ImplDX11_InvalidateDeviceObjects();
@@ -34,6 +36,7 @@ namespace Callbacks
 		return g_hkResizeBuffers.CallOriginal<HRESULT>(pSwapChain, bufferCount, w, h, newFormat, flags);
 	}
 
+	// Calls are event-based (e.g. keypress, clipboard action)
 	LRESULT WINAPI WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
