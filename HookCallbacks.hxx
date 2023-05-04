@@ -37,7 +37,7 @@ namespace Callbacks
 		ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 
 		if (uMsg == WM_KEYDOWN && wParam == VK_END)
-			FreeLibrary(g_hModule);
+			CloseHandle(CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)FreeLibrary, g_hModule, 0, nullptr)); // Self-destruction from a different thread :3
 
 		return CallWindowProcW(g_pOriginalWndProc, hWnd, uMsg, wParam, lParam);
 	}
