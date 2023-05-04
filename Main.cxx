@@ -64,7 +64,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 	}
 	case DLL_PROCESS_DETACH:
 	{
-		// Unhook hooked hooks
+		// Unhook hooked hooks <3
 		SetWindowLongPtrW(g_hWnd, GWLP_WNDPROC, (LONG_PTR)g_pOriginalWndProc);
 		g_hkResizeBuffers.Unhook();
 		g_hkPresent.Unhook();
