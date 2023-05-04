@@ -1,10 +1,10 @@
 #include "Globals.hxx"
 
-HMODULE g_hModule = nullptr;
-HWND g_hWnd = nullptr;
+HMODULE g_hModule;
+HWND g_hWnd;
 
 bool g_bIsUsingVulkan;
-IDXGISwapChain* g_pSwapChain = nullptr;
+ID3D11Device* g_pD3DDevice;
 
 WNDPROC g_pOriginalWndProc;
 HookManager g_hkPresent;

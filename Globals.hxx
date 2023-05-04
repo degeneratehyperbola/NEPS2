@@ -9,7 +9,7 @@ extern HMODULE g_hModule;
 extern HWND g_hWnd;
 
 extern bool g_bIsUsingVulkan;
-extern IDXGISwapChain* g_pSwapChain;
+extern ID3D11Device* g_pD3DDevice;
 
 extern WNDPROC g_pOriginalWndProc;
 extern HookManager g_hkPresent;

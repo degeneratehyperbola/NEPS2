@@ -26,22 +26,22 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 			// TODO Vulkan support
 		} else
 		{
-			g_pSwapChain = MemorySearch::RelativeToAbsolute<IDXGISwapChain*>(MemorySearch::FindPattern("rendersystemdx11.dll", "66 0F 7F 05 ? ? ? ? 66 0F 7F 0D ? ? ? ? 48 89 35 ? ? ? ?") + 4);
+			g_pD3DDevice = *MemorySearch::RelativeToAbsolute<ID3D11Device**>(MemorySearch::FindPattern("rendersystemdx11", "48 89 1D ? ? ? ? 48 89 3D") + 10);
 		}
 
 		// Setup ImGui
 		ImGui::CreateContext();
 
-		ID3D11Device* pDevice = nullptr;
-		ID3D11DeviceContext* pDeviceContext = nullptr;
-
-		g_pSwapChain->GetDevice(__uuidof(ID3D11Device), (void**)&pDevice);
-		pDevice->GetImmediateContext(&pDeviceContext);
-
 		if (g_bIsUsingVulkan)
-			{} // TODO Vulkan support
-		else
-			ImGui_ImplDX11_Init(pDevice, pDeviceContext);
+		{
+			// TODO Vulkan support
+		} else
+		{
+			ID3D11DeviceContext* pDeviceContext = nullptr;
+			g_pD3DDevice->GetImmediateContext(&pDeviceContext);
+
+			ImGui_ImplDX11_Init(g_pD3DDevice, pDeviceContext);
+		}
 		
 		ImGui_ImplWin32_Init(g_hWnd);
 
@@ -52,9 +52,10 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 		// Hook interesting functions
 		g_pOriginalWndProc = (WNDPROC)SetWindowLongPtrW(g_hWnd, GWLP_WNDPROC, (LONG_PTR)Callbacks::WndProc);
 
-		auto swapChainVtable = GET_VTABLE(g_pSwapChain);
-		g_hkPresent = HookManager(swapChainVtable[8], Callbacks::Present);
-		g_hkResizeBuffers = HookManager(swapChainVtable[13], Callbacks::ResizeBuffers);
+		void* pPresent = *MemorySearch::RelativeToAbsolute<void**>(MemorySearch::FindPattern("gameoverlayrenderer64", "4C 8D 05 ? ? ? ? 41 B9 ? ? ? ? 48 8D 15 ? ? ? ? E8 ? ? ? ? 48 8B 4F 50") + 3);
+		void* pResizeBuffers = *MemorySearch::RelativeToAbsolute<void**>(MemorySearch::FindPattern("gameoverlayrenderer64", "48 8B 4F 68 4C 8D 05") + 7);
+		g_hkPresent = HookManager(pPresent, Callbacks::Present);
+		g_hkResizeBuffers = HookManager(pResizeBuffers, Callbacks::ResizeBuffers);
 
 		g_hkPresent.Hook();
 		g_hkResizeBuffers.Hook();
