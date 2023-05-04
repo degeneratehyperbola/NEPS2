@@ -1,22 +1,72 @@
 {
+	// See https://go.microsoft.com/fwlink/?LinkId=733558 for the documentation about the tasks.json format
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Build ${workspaceFolderBasename} in Release",
+			"label": "(cl) Build in Debug",
 			"type": "shell",
-			"command": "g++ -m64 -shared -O3 -o $(Get-ChildItem -Include *.cpp, *.c, *.cxx -File -Recurse | ForEach-Object $_.FullName) -ld3d11 -lDxgi -lD3dcompiler_47 -I include -o ./build/${workspaceFolderBasename}.dll",
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			}
-		},
-		{
-			"label": "Build ${workspaceFolderBasename} in Debug",
-			"type": "shell",
-			"command": "g++ -m64 -shared -g -Og -o $(Get-ChildItem -Include *.cpp, *.c, *.cxx -File -Recurse | ForEach-Object $_.FullName) -ld3d11 -lDxgi -lD3dcompiler_47 -I include -o ./build/${workspaceFolderBasename}.dll",
-			"group": {
-				"kind": "build",
-			}
+			"command": "cl",
+			"group": "build",
+			"problemMatcher": "$msCompile",
+			"args": [
+				// Fuck yo stupid ass banner
+				"/nologo",
+
+				// Multithreaded debug DLL runtime
+				"/MDd",
+
+				// Debug DLL
+				"/LDd",
+
+				// Exception handler
+				"/EHsc",
+
+				// Generate complete debugging information
+				"/Zi",
+
+				// No optimizations
+				"/Od",
+
+				// Require AVX for intrinsics
+				"/arch:AVX",
+				
+				// Use `__vectorcall` by default
+				"/Gv",
+
+				// Linker inputs
+				"d3d11.lib",
+				"dxgi.lib",
+
+				// Source file inputs
+				// Stupid fuxking piece of shit
+				// Find your stupid source files yourself, you stupid useless compiler
+				"$(Get-ChildItem","-Include","*.cpp,*.c,*.cxx","-File","-Recurse).FullName",
+				
+				// Includes
+				"/I",
+				"./include/",
+				
+				// Intermediate shit
+				"/Fo:",
+				"./build/intermediate/",
+
+				// Program database
+				"/Fd:",
+				"./build/",
+
+				// Output
+				"/Fe:",
+				"./build/${workspaceFolderBasename}.debug.dll",
+
+				// Linker args
+				"/link",
+				
+				// No incremental linking
+				"/INCREMENTAL:NO",
+
+				// 64-bit target
+				"/MACHINE:X64"
+			]
 		}
 	]
 }
