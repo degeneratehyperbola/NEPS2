@@ -2,6 +2,7 @@
 
 #include <minhook/MinHook.h>
 
+// HookManager is used for hooking and managing a single target function
 class HookManager
 {
 public:
@@ -20,6 +21,7 @@ public:
 
 	HookManager() = default;
 
+	// HookManager is used for hooking and managing a single target function
 	template<typename T, typename C>
 	HookManager(T* pTarget, C* pCallback) : m_pTarget{ (void*)pTarget }, m_pCallback{ (void*)pCallback }, m_pTrampoline{ nullptr }
 	{
@@ -56,6 +58,8 @@ public:
 	template<typename Ret, typename... Args>
 	Ret CallOriginal(Args... args)
 	{
+		assert(IsHooked());
+
 		auto originalFunction = reinterpret_cast<Ret(*)(Args...)>(m_pTrampoline);
 		return originalFunction(args...);
 	}
