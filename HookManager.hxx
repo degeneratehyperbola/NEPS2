@@ -9,7 +9,7 @@ public:
 	{
 		if (MH_Initialize() != MH_OK)
 			return false;
-		
+
 		return true;
 	}
 
@@ -21,18 +21,12 @@ public:
 	HookManager() = default;
 
 	template<typename T, typename C>
-	HookManager(T* pTarget, C* pCallback)
-		: m_pTarget{ (void*)pTarget }
-		, m_pCallback{ (void*)pCallback }
-		, m_pTrampoline{ nullptr }
+	HookManager(T* pTarget, C* pCallback) : m_pTarget{ (void*)pTarget }, m_pCallback{ (void*)pCallback }, m_pTrampoline{ nullptr }
 	{
 		// Use Hook() to initialize
 	}
 
-	~HookManager()
-	{
-		Unhook();
-	}
+	~HookManager() { Unhook(); }
 
 	bool Hook()
 	{
@@ -49,13 +43,15 @@ public:
 
 	void Unhook()
 	{
-		if (m_pTrampoline != nullptr)
+		if (IsHooked())
 		{
 			MH_DisableHook(m_pTarget);
 			MH_RemoveHook(m_pTarget);
 			m_pTrampoline = nullptr;
 		}
 	}
+
+	bool IsHooked() { return m_pTrampoline; }
 
 	template<typename Ret, typename... Args>
 	Ret CallOriginal(Args... args)
