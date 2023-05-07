@@ -36,6 +36,7 @@
 				// Linker inputs
 				"d3d11.lib",
 				"dxgi.lib",
+				"$env:VK_SDK_PATH/Lib/vulkan-1.lib",
 
 				// Source file inputs
 				// Stupid fuxking piece of shit
@@ -45,6 +46,8 @@
 				// Includes
 				"/I",
 				"./include/",
+				"/I",
+				"$env:VK_SDK_PATH/Include/",
 				
 				// Intermediate shit
 				"/Fo:",
