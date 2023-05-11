@@ -58,7 +58,11 @@ public:
 	template<typename Ret, typename... Args>
 	Ret CallOriginal(Args... args)
 	{
-		assert(IsHooked());
+		if (!IsHooked())
+		{
+			auto originalFunction = reinterpret_cast<Ret(*)(Args...)>(m_pTarget);
+			return originalFunction(args...);
+		}
 
 		auto originalFunction = reinterpret_cast<Ret(*)(Args...)>(m_pTrampoline);
 		return originalFunction(args...);
