@@ -17,5 +17,5 @@ namespace MemorySearch
 		return reinterpret_cast<T>(address + *reinterpret_cast<int32_t*>(address) + 4);
 	}
 
-	uintptr_t FindPattern(const char* moduleName, const char* pattern, bool unloadWhenNotFound = true);
+	uintptr_t FindPattern(const char* moduleName, const char* pattern, bool unloadWhenNotFound = false);
 }

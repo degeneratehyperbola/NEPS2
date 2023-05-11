@@ -51,8 +51,8 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 		}
 		else
 		{
-			void* pPresent = *MemorySearch::RelativeToAbsolute<void**>(MemorySearch::FindPattern("gameoverlayrenderer64", "4C 8D 05 ? ? ? ? 41 B9 ? ? ? ? 48 8D 15 ? ? ? ? E8 ? ? ? ? 48 8B 4F 50") + 3);
-			void* pResizeBuffers = *MemorySearch::RelativeToAbsolute<void**>(MemorySearch::FindPattern("gameoverlayrenderer64", "48 8B 4F 68 4C 8D 05") + 7);
+			void* pPresent = *MemorySearch::RelativeToAbsolute<void**>(MemorySearch::FindPattern("gameoverlayrenderer64", "4C 8D 05 ? ? ? ? 41 B9 ? ? ? ? 48 8D 15 ? ? ? ? E8 ? ? ? ? 48 8B 4F 50", true) + 3);
+			void* pResizeBuffers = *MemorySearch::RelativeToAbsolute<void**>(MemorySearch::FindPattern("gameoverlayrenderer64", "48 8B 4F 68 4C 8D 05", true) + 7);
 
 			g_hkPresent = HookManager(pPresent, Callbacks::Present);
 			g_hkResizeBuffers = HookManager(pResizeBuffers, Callbacks::ResizeBuffers);
