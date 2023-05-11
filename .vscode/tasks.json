@@ -12,10 +12,13 @@
 				// Fuck yo stupid ass banner
 				"/nologo",
 
-				// Multithreaded debug DLL runtime
+				// C++ standard
+				"/std:c++latest",
+
+				// Create multithreaded debug DLL
 				"/MDd",
 
-				// Debug DLL
+				// Create debug DLL
 				"/LDd",
 
 				// Exception handler
