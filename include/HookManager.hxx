@@ -23,7 +23,7 @@ public:
 
 	// HookManager is used for hooking and managing a single target function
 	template<typename T, typename C>
-	HookManager(T* pTarget, C* pCallback) : m_pTarget{ (void*)pTarget }, m_pCallback{ (void*)pCallback }, m_pTrampoline{ nullptr }
+	HookManager(T pTarget, C pCallback) : m_pTarget{ (void*)pTarget }, m_pCallback{ (void*)pCallback }, m_pTrampoline{ nullptr }
 	{
 		// Use Hook() to initialize
 	}
