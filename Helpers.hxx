@@ -3,5 +3,5 @@
 namespace NEPS
 {
 	void Unload();
-	void ErrorMsgBox(const char* title, const char* contentFmt, ...);
+	void Error(const char* title, const char* contentFmt, ...);
 }

@@ -3,11 +3,21 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_dx11.h>
 #include <imgui/imgui_impl_win32.h>
+#include <MemoryTools.hxx>
 
 #include "Globals.hxx"
 #include "HookCallbacks.hxx"
-#include "MemoryTools.hxx"
 #include "Helpers.hxx"
+
+// Scan for an essential memory address, otherwise self-destruct
+#define FIND_PATTERN_IMPORTANT(variableName, moduleName, pattern, offsetFromInitialResult) \
+	uintptr_t variableName = MemorySearch::FindPatternInModule(moduleName, pattern); \
+	if (!variableName) \
+	{ \
+		NEPS::Error("Pattern not found!", "%s.dll | %s", moduleName, pattern); \
+		return 0; \
+	} \
+	variableName = *MemorySearch::RelativeToAbsolute<uintptr_t*>(variableName + offsetFromInitialResult);
 
 // DLL entry point
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
@@ -22,8 +32,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 
 		if (!g_hWnd)
 		{
-			NEPS::ErrorMsgBox("Failed to find game's window!", "Expected name \"%s\"", "Counter-Strike 2");
-			NEPS::Unload();
+			NEPS::Error("Failed to find game's window!", "Expected name \"%s\"", "Counter-Strike 2");
 			return FALSE;
 		}
 
@@ -37,8 +46,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 		// Setup our hooking method
 		if (!HookManager::Setup())
 		{
-			NEPS::ErrorMsgBox("Hook manager initialization failed!", "HookManager::Setup()");
-			NEPS::Unload();
+			NEPS::Error("Hook manager initializaation failed!", "Line %u", __LINE__ - 2);
 			return FALSE;
 		}
 
@@ -51,11 +59,11 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 		}
 		else
 		{
-			void* pPresent = *MemorySearch::RelativeToAbsolute<void**>(MemorySearch::FindPattern("gameoverlayrenderer64", "4C 8D 05 ? ? ? ? 41 B9 ? ? ? ? 48 8D 15 ? ? ? ? E8 ? ? ? ? 48 8B 4F 50", true) + 3);
-			void* pResizeBuffers = *MemorySearch::RelativeToAbsolute<void**>(MemorySearch::FindPattern("gameoverlayrenderer64", "48 8B 4F 68 4C 8D 05", true) + 7);
+			FIND_PATTERN_IMPORTANT(fnPresent, "gameoverlayrenderer64", "4C 8D 05 ? ? ? ? 41 B9 ? ? ? ? 48 8D 15 ? ? ? ? E8 ? ? ? ? 48 8B 4F 50", 3);
+			FIND_PATTERN_IMPORTANT(fnResizeBuffers, "gameoverlayrenderer64", "48 8B 4F 68 4C 8D 05", 7);
 
-			g_hkPresent = HookManager(pPresent, Callbacks::Present);
-			g_hkResizeBuffers = HookManager(pResizeBuffers, Callbacks::ResizeBuffers);
+			g_hkPresent = HookManager(fnPresent, Callbacks::Present);
+			g_hkResizeBuffers = HookManager(fnResizeBuffers, Callbacks::ResizeBuffers);
 
 			g_hkPresent.Hook();
 			g_hkResizeBuffers.Hook();
