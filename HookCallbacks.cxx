@@ -9,6 +9,7 @@
 
 #include "Globals.hxx"
 #include "Helpers.hxx"
+#include "GUI.hxx"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
 
@@ -34,7 +35,10 @@ HRESULT WINAPI Callbacks::Present(IDXGISwapChain* pSwapChain, UINT syncInterval,
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	ImGui::ShowDemoWindow();
+	#ifdef _DEBUG
+	GUI::RenderDebugWindow();
+	#endif
+	GUI::Render();
 
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
