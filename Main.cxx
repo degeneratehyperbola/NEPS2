@@ -15,7 +15,7 @@
 	if (!variableName) \
 	{ \
 		NEPS::Error("Pattern not found!", "%s.dll | %s", moduleName, pattern); \
-		return 0; \
+		return FALSE; \
 	} \
 	variableName = *MemorySearch::RelativeToAbsolute<uintptr_t*>(variableName + offsetFromInitialResult);
 
