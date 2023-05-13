@@ -9,6 +9,12 @@ bool g_bGUIOpen = true;
 
 bool g_bDemoWindowOpen = true;
 
+void RenderContextMenu()
+{
+	if (ImGui::MenuItem("Unload"))
+		NEPS::Unload();
+}
+
 void GUI::Render()
 {
 	// Handle menu toggle logic
@@ -18,29 +24,33 @@ void GUI::Render()
 	if (!g_bGUIOpen) return;
 
 	// Render the main menu bar
-	ImGui::BeginMainMenuBar();
+	if (ImGui::BeginMainMenuBar())
+	{
+		// Logo
+		if (ImGui::BeginMenu("NEPS2"))
+		{
+			RenderContextMenu();
+			ImGui::EndMenu();
+		}
 
-	// Logo
-	ImGui::TextUnformatted("NEPS2");
-	ImGui::Separator();
-	#ifdef _DEBUG
-	ImGui::TextDisabled("%s Debug Build", __DATE__);
-	#else
-	ImGui::TextDisabled("%s Build", __DATE__);
-	#endif
-	ImGui::Separator();
+		ImGui::Separator();
 
-	// Menu bar items
-	#ifdef _DEBUG
-	ImGui::MenuItem("Debug Window", nullptr, &g_bDemoWindowOpen);
-	#endif
+		#ifdef _DEBUG
+		ImGui::TextDisabled("%s Debug Build", __DATE__);
+		#else
+		ImGui::TextDisabled("%s Build", __DATE__);
+		#endif
 
-	// Unload button
-	ImGui::Separator();
-	if (ImGui::MenuItem("Unload"))
-		NEPS::Unload();
+		ImGui::Separator();
 
-	ImGui::EndMainMenuBar();
+		// Menu bar items
+		#ifdef _DEBUG
+		ImGui::MenuItem("Debug Window", nullptr, &g_bDemoWindowOpen);
+		#endif
+
+		ImGui::EndMainMenuBar();
+	}
+
 
 	// Render opened windows
 	if (g_bDemoWindowOpen)
