@@ -20,9 +20,9 @@ using byte = uint8_t;
 namespace VirtualMethod
 {
 	template <size_t Idx, typename Ret, typename... Args>
-	constexpr Ret call(void* objectBase, Args... args)
+	constexpr Ret call(void* classBase, Args... args)
 	{
-		void** vmt = GET_VTABLE(objectBase);
+		void** vmt = GET_VTABLE(classBase);
 		auto virtualMethod = reinterpret_cast<Ret(__thiscall*)(Args...)>(vmt[Idx]);
 		return virtualMethod(classBase, args...);
 	}
