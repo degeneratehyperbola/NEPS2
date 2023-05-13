@@ -57,5 +57,8 @@ LRESULT WINAPI Callbacks::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 {
 	ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 
+	if (uMsg == WM_KEYDOWN && wParam == VK_END)
+		NEPS::Unload();
+
 	return CallWindowProcW(g_pOriginalWndProc, hWnd, uMsg, wParam, lParam);
 }
