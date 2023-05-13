@@ -23,6 +23,16 @@ void GUI::Render()
 
 	if (!g_bGUIOpen) return;
 
+	// Context menu logic
+	if (!ImGui::GetIO().WantCaptureMouse && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+		ImGui::OpenPopup("##ContextMenu");
+
+	if (ImGui::BeginPopup("##ContextMenu"))
+	{
+		RenderContextMenu();
+		ImGui::EndPopup();
+	}
+
 	// Render the main menu bar
 	if (ImGui::BeginMainMenuBar())
 	{
