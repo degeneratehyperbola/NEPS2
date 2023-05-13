@@ -3,5 +3,4 @@
 namespace GUI
 {
 	void Render();
-	void RenderDebugWindow();
 }
