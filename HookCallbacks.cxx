@@ -26,6 +26,10 @@ HRESULT WINAPI Callbacks::Present(IDXGISwapChain* pSwapChain, UINT syncInterval,
 		ImGui_ImplDX11_Init(pD3DDevice, pDeviceContext);
 
 		auto& io = ImGui::GetIO();
+		// We do not want to create any files inside the game folder (OwO') !!!
+		io.IniFilename = nullptr;
+		io.LogFilename = nullptr;
+		
 		io.BackendFlags &= ~ImGuiBackendFlags_HasMouseCursors; // Disable mouse cursor changes as they're handled by the game
 
 		g_bImGuiInitialized = true;
