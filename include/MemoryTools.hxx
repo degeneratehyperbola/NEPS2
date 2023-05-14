@@ -2,6 +2,13 @@
 
 #include <cstdint>
 
+// Not exactly a "Memory Tool" but aiii vhatever :3
+#define _NAMEOFX(x) #x
+#define _NAMEOF(x) _NAMEOFX(x)
+
+#define _CONCATX(x, y) x##y
+#define _CONCAT(x, y) _CONCATX(x, y)
+
 #define PAD(size) \
 private: \
     byte _CONCAT(_pad, __COUNTER__)[size]; \
