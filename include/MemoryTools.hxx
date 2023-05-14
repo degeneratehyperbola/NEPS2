@@ -12,7 +12,7 @@ public:
 #define VIRTUAL_METHOD(returnType, name, idx, params, passedArgs) \
 returnType name params \
 { \
-	return VirtualMethod::call<returnType, idx>passedArgs; \
+	return VirtualMethod::call<idx, returnType>passedArgs; \
 }
 
 using byte = uint8_t;
@@ -23,7 +23,7 @@ namespace VirtualMethod
 	constexpr Ret call(void* classBase, Args... args)
 	{
 		void** vmt = GET_VTABLE(classBase);
-		auto virtualMethod = reinterpret_cast<Ret(__thiscall*)(Args...)>(vmt[Idx]);
+		auto virtualMethod = reinterpret_cast<Ret(__thiscall*)(void*, Args...)>(vmt[Idx]);
 		return virtualMethod(classBase, args...);
 	}
 }
