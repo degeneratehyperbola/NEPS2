@@ -16,8 +16,8 @@ public:
 
 #define GET_VTABLE(obj) (*reinterpret_cast<void***>(obj))
 
-#define VIRTUAL_METHOD(returnType, name, idx, params, passedArgs) \
-returnType name params \
+#define VIRTUAL_METHOD(idx, returnType, name, params, passedArgs) \
+inline returnType name params \
 { \
 	return VirtualMethod::call<idx, returnType>passedArgs; \
 }
