@@ -5,6 +5,8 @@
 #include <imgui/imgui_impl_win32.h>
 #include <MemoryTools.hxx>
 
+#include "CS2/General.hxx"
+
 #include "Globals.hxx"
 #include "HookCallbacks.hxx"
 #include "Helpers.hxx"
@@ -36,7 +38,10 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 			return FALSE;
 		}
 
-		g_bIsUsingVulkan = GetModuleHandleA("rendersystemvulkan.dll");
+		g_bIsUsingVulkan = GetModuleHandleA("rendersystemvulkan");
+
+		// Find various game interfaces and functions
+		CS2::SetupInterfaces();
 
 		// Setup ImGui
 		ImGui::CreateContext();
