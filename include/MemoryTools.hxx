@@ -1,10 +1,11 @@
 #pragma once
 
+#include <functional> // For `reference_wrapper` and `std::ref`
+#include <Windows.h>
 #include <cstdint>
 
-// Not exactly a "Memory Tool" but aiii vhatever :3
-#define _NAMEOFX(x) #x
-#define _NAMEOF(x) _NAMEOFX(x)
+#define _STRINGIFYX(x) #x
+#define _STRINGIFY(x) _STRINGIFYX(x)
 
 #define _CONCATX(x, y) x##y
 #define _CONCAT(x, y) _CONCATX(x, y)
@@ -13,6 +14,12 @@
 private: \
     byte _CONCAT(_pad, __COUNTER__)[size]; \
 public:
+
+#define PROPERTY(type, name, offset) \
+type& name() { return *reinterpret_cast<type*>((uintptr_t)this + offset); }
+
+#define GET_EXTERNAL_PROC(moduleName, procName, returnType, params) \
+(reinterpret_cast<returnType (WINAPI*)params>(GetProcAddress(GetModuleHandleA(moduleName), procName)))
 
 #define GET_VTABLE(obj) (*reinterpret_cast<void***>(obj))
 
