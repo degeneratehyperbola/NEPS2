@@ -89,10 +89,13 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 		HookManager::Cleanup();
 
 		// Cleanup ImGui
-		if (g_bIsUsingVulkan)
-			; // TODO Vulkan support
-		else
-			ImGui_ImplDX11_Shutdown();
+		if (g_bImGuiInitialized)
+		{
+			if (g_bIsUsingVulkan)
+				; // TODO Vulkan support
+			else
+				ImGui_ImplDX11_Shutdown();
+		}
 
 		ImGui_ImplWin32_Shutdown();
 		ImGui::DestroyContext();
