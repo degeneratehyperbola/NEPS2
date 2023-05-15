@@ -10,7 +10,7 @@ void CS2::SetRelativeMouseMode(bool enabled)
 	if (fn) fn(enabled);
 }
 
-void CS2::EnableWindowPolling(bool enabled)
+void CS2::EnableMouseCapture(bool enabled)
 {
 	auto fn = EXTERNAL_PROC("SDL2", "SDL_SetWindowGrab", void, (void*, bool));
 	if (fn) fn(InputSystem->GetSDLWindow(), enabled);

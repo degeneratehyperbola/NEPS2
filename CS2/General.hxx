@@ -8,7 +8,7 @@ namespace CS2
 	void SetupInterfaces();
 
 	void SetRelativeMouseMode(bool enabled);
-	void EnableWindowPolling(bool enabled);
+	void EnableMouseCapture(bool enabled);
 	void SetMousePos(int x, int y);
 
 	inline IInputSystem* InputSystem;
