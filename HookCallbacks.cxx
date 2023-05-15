@@ -7,6 +7,8 @@
 #include <imgui/imgui_impl_dx11.h>
 #include <imgui/imgui_impl_win32.h>
 
+#include "CS2/General.hxx"
+
 #include "Globals.hxx"
 #include "Helpers.hxx"
 #include "GUI.hxx"
@@ -41,6 +43,21 @@ HRESULT WINAPI Callbacks::Present(IDXGISwapChain* pSwapChain, UINT syncInterval,
 
 	GUI::Render();
 
+	// Show mouse cursor when GUI is open, otherwise restore to previous state
+	if (GUI::IsOpen())
+	{
+		CS2::SetRelativeMouseMode(false);
+		CS2::EnableWindowPolling(false);
+	}
+	else if (CS2::InputSystem->IsRelativeMouseMode())
+	{
+		CS2::SetRelativeMouseMode(true);
+		CS2::EnableWindowPolling(true);
+		int w, h;
+		CS2::EngineClient->GetScreenSize(w, h);
+		CS2::SetMousePos(w / 2, h / 2);
+	}
+
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
@@ -63,6 +80,41 @@ LRESULT WINAPI Callbacks::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 
 	if (uMsg == WM_KEYDOWN && wParam == VK_END)
 		NEPS::Unload();
+
+	// Disable all input if GUI is open
+	if (GUI::IsOpen())
+	{
+		switch (uMsg)
+		{
+			case WM_MOUSEMOVE:
+			case WM_NCMOUSEMOVE:
+			case WM_MOUSELEAVE:
+			case WM_NCMOUSELEAVE:
+			case WM_LBUTTONDOWN:
+			case WM_LBUTTONDBLCLK:
+			case WM_RBUTTONDOWN:
+			case WM_RBUTTONDBLCLK:
+			case WM_MBUTTONDOWN:
+			case WM_MBUTTONDBLCLK:
+			case WM_XBUTTONDOWN:
+			case WM_XBUTTONDBLCLK:
+			case WM_LBUTTONUP:
+			case WM_RBUTTONUP:
+			case WM_MBUTTONUP:
+			case WM_XBUTTONUP:
+			case WM_MOUSEWHEEL:
+			case WM_MOUSEHWHEEL:
+			case WM_KEYDOWN:
+			case WM_KEYUP:
+			case WM_SYSKEYDOWN:
+			case WM_SYSKEYUP:
+			case WM_SETFOCUS:
+			case WM_KILLFOCUS:
+			case WM_CHAR:
+			case WM_DEVICECHANGE:
+				return 1;
+		}
+	}
 
 	return CallWindowProcW(g_pOriginalWndProc, hWnd, uMsg, wParam, lParam);
 }

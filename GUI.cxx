@@ -1,27 +1,30 @@
 #include "GUI.hxx"
 
 #include <imgui/imgui.h>
+#include <MemoryTools.hxx>
+
+#include "CS2/General.hxx"
 
 #include "Globals.hxx"
 #include "Helpers.hxx"
 
-bool g_bGUIOpen = true;
+static bool s_isGUIOpen = true;
 
-bool g_bDemoWindowOpen = true;
+static bool s_isDemoWindowOpen = true;
+static bool s_isDebugWindowOpen = true;
 
-void RenderContextMenu()
-{
-	if (ImGui::MenuItem("Unload"))
-		NEPS::Unload();
-}
+void RenderDebugWindow();
+void RenderContextMenu();
+
+bool GUI::IsOpen() { return s_isGUIOpen; }
 
 void GUI::Render()
 {
 	// Handle menu toggle logic
 	if (ImGui::IsKeyPressed(ImGuiKey_Delete, false))
-		g_bGUIOpen = !g_bGUIOpen;
+		s_isGUIOpen = !s_isGUIOpen;
 
-	if (!g_bGUIOpen) return;
+	if (!s_isGUIOpen) return;
 
 	// Context menu logic
 	if (!ImGui::GetIO().WantCaptureMouse && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
@@ -55,14 +58,35 @@ void GUI::Render()
 
 		// Menu bar items
 		#ifdef _DEBUG
-		ImGui::MenuItem("Debug Window", nullptr, &g_bDemoWindowOpen);
+		ImGui::MenuItem("Demo Window", nullptr, &s_isDemoWindowOpen);
+		ImGui::MenuItem("Debug Window", nullptr, &s_isDebugWindowOpen);
 		#endif
-
+		
 		ImGui::EndMainMenuBar();
 	}
 
-
 	// Render opened windows
-	if (g_bDemoWindowOpen)
-		ImGui::ShowDemoWindow(&g_bDemoWindowOpen);
+	#ifdef _DEBUG
+	if (s_isDemoWindowOpen) ImGui::ShowDemoWindow(&s_isDemoWindowOpen);
+	RenderDebugWindow();
+	#endif
+}
+
+void RenderContextMenu()
+{
+	if (ImGui::MenuItem("Unload"))
+		NEPS::Unload();
+}
+
+void RenderDebugWindow()
+{
+	if (!s_isDebugWindowOpen) return;
+
+	if (ImGui::CollapsingHeader("Game Interfaces Tests"))
+	{
+		// if (ImGui::TreeNode("Input System [" _STRINGIFY(CS2::IInputSystem) "]"))
+		// {
+		// 	ImGui::TreePop();
+		// }
+	}
 }
