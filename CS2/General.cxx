@@ -33,6 +33,6 @@ T* FindInterface(const char* moduleName, const char* versionString)
 
 void CS2::SetupInterfaces()
 {
-	InputSystem = FindInterface<IInputSystem>("inputsystem", INPUT_SYSTEM_VERSION);
-	EngineClient = FindInterface<IEngineClient>("engine2", ENGINE_CLIENT_VERSION);
+	InputSystem = FindInterface<IInputSystem>("inputsystem", "InputSystemVersion001");
+	EngineClient = FindInterface<IEngineClient>("engine2", "Source2EngineToClient001");
 }

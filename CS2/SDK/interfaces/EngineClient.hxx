@@ -2,8 +2,6 @@
 
 #include <MemoryTools.hxx>
 
-#define ENGINE_CLIENT_VERSION "Source2EngineToClient001"
-
 class IEngineClient
 {
 public:
