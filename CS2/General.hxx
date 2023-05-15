@@ -1,7 +1,7 @@
 #pragma once
 
-#include "SDK/InputSystem.hxx"
-#include "SDK/EngineClient.hxx"
+#include "SDK/interfaces/InputSystem.hxx"
+#include "SDK/interfaces/EngineClient.hxx"
 
 namespace CS2
 {
