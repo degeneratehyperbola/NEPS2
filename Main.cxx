@@ -13,7 +13,7 @@
 
 // Scan for an essential memory address, otherwise self-destruct
 #define FIND_PATTERN_IMPORTANT(variableName, moduleName, pattern, offsetFromInitialResult) \
-	uintptr_t variableName = MemorySearch::FindPatternInModule(moduleName, pattern); \
+	uintptr_t variableName = MemorySearch::FindPattern(moduleName, pattern); \
 	if (!variableName) \
 	{ \
 		NEPS::Error("Pattern not found!", "%s.dll | %s", moduleName, pattern); \

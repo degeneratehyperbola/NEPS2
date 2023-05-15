@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional> // For `reference_wrapper` and `std::ref`
+#include <intrin.h> // For useful intrinsics like `_ReturnAddress`
 #include <Windows.h>
 #include <cstdint>
 
@@ -15,10 +16,7 @@ private: \
     byte _CONCAT(_pad, __COUNTER__)[size]; \
 public:
 
-#define PROPERTY(type, name, offset) \
-type& name() { return *reinterpret_cast<type*>((uintptr_t)this + offset); }
-
-#define GET_EXTERNAL_PROC(moduleName, procName, returnType, params) \
+#define EXTERNAL_PROC(moduleName, procName, returnType, params) \
 (reinterpret_cast<returnType (WINAPI*)params>(GetProcAddress(GetModuleHandleA(moduleName), procName)))
 
 #define GET_VTABLE(obj) (*reinterpret_cast<void***>(obj))
@@ -28,6 +26,9 @@ inline returnType name params \
 { \
 	return VirtualMethod::call<idx, returnType>passedArgs; \
 }
+
+#define PROPERTY(type, name, offset) \
+type& name() { return *reinterpret_cast<type*>((uintptr_t)this + offset); }
 
 using byte = uint8_t;
 
@@ -50,6 +51,8 @@ namespace MemorySearch
 		return reinterpret_cast<T>(address + *reinterpret_cast<int32_t*>(address) + 4);
 	}
 
-	uintptr_t FindPattern(const byte* base, ptrdiff_t size, const char* pattern);
-	uintptr_t FindPatternInModule(const char* moduleName, const char* pattern);
+	bool IsInBounds(HMODULE hModule, uintptr_t address);
+	bool IsInBounds(const char* moduleName, uintptr_t address);
+	uintptr_t FindPattern(uintptr_t base, ptrdiff_t size, const char* pattern);
+	uintptr_t FindPattern(const char* moduleName, const char* pattern);
 }

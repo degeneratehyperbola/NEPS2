@@ -5,6 +5,30 @@
 #include <vector>
 #include <tuple>
 
+std::tuple<uintptr_t, ptrdiff_t> GetBounds(HMODULE hModule)
+{
+	MODULEINFO moduleInfo;
+	if (!GetModuleInformation(GetCurrentProcess(), hModule, &moduleInfo, sizeof(moduleInfo)))
+		return { 0, 0 };
+
+	return { reinterpret_cast<uintptr_t>(moduleInfo.lpBaseOfDll), moduleInfo.SizeOfImage };
+}
+
+bool MemorySearch::IsInBounds(HMODULE hModule, uintptr_t address)
+{
+	const auto [moduleBase, moduleSize] = GetBounds(hModule);
+	return (address >= moduleBase) && (address < moduleBase + moduleSize);
+}
+
+bool MemorySearch::IsInBounds(const char* moduleName, uintptr_t address)
+{
+	const auto hModule = GetModuleHandleA(moduleName);
+	if (!hModule)
+		return false;
+
+	return IsInBounds(hModule, address);
+}
+
 std::tuple<std::vector<byte>, std::vector<byte>> PatternToBytesAndMask(const char* pattern)
 {
 	std::vector<byte> bytes, mask;
@@ -21,11 +45,11 @@ std::tuple<std::vector<byte>, std::vector<byte>> PatternToBytesAndMask(const cha
 	return { bytes, mask };
 }
 
-uintptr_t MemorySearch::FindPattern(const byte* base, ptrdiff_t size, const char* pattern)
+uintptr_t MemorySearch::FindPattern(const uintptr_t base, ptrdiff_t size, const char* pattern)
 {
 	const auto [patternBytes, patternMask] = PatternToBytesAndMask(pattern);
-	const auto end = base + size - patternBytes.size();
-	for (const byte* currentByte = base; currentByte < end; ++currentByte)
+	const byte* end = reinterpret_cast<byte*>(base) + size - patternBytes.size();
+	for (const byte* currentByte = reinterpret_cast<byte*>(base); currentByte < end; ++currentByte)
 	{
 		bool match = true;
 		for (size_t i = 0; i < patternBytes.size(); i++)
@@ -44,18 +68,12 @@ uintptr_t MemorySearch::FindPattern(const byte* base, ptrdiff_t size, const char
 	return 0;
 }
 
-uintptr_t MemorySearch::FindPatternInModule(const char* moduleName, const char* pattern)
+uintptr_t MemorySearch::FindPattern(const char* moduleName, const char* pattern)
 {
 	const auto hModule = GetModuleHandleA(moduleName);
 	if (!hModule)
 		return 0;
 
-	MODULEINFO moduleInfo;
-	if (!GetModuleInformation(GetCurrentProcess(), hModule, &moduleInfo, sizeof(moduleInfo)))
-		return 0;
-
-	const auto moduleBase = (byte*)moduleInfo.lpBaseOfDll;
-	const auto moduleSize = (ptrdiff_t)moduleInfo.SizeOfImage;
-	
+	const auto [moduleBase, moduleSize] = GetBounds(hModule);
 	return FindPattern(moduleBase, moduleSize, pattern);
 }
