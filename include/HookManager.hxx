@@ -32,7 +32,7 @@ public:
 
 	bool Hook()
 	{
-		if (!m_pTarget || !m_pCallback) return false;
+		if (!m_pTarget || !m_pCallback || IsHooked()) return false;
 
 		if (MH_CreateHook(m_pTarget, m_pCallback, &m_pTrampoline) != MH_OK)
 			return false;
@@ -58,13 +58,7 @@ public:
 	template<typename Ret, typename... Args>
 	Ret CallOriginal(Args... args)
 	{
-		if (!IsHooked())
-		{
-			auto originalFunction = reinterpret_cast<Ret(*)(Args...)>(m_pTarget);
-			return originalFunction(args...);
-		}
-
-		auto originalFunction = reinterpret_cast<Ret(*)(Args...)>(m_pTrampoline);
+		auto originalFunction = reinterpret_cast<Ret(*)(Args...)>(IsHooked() ? m_pTrampoline : m_pTarget);
 		return originalFunction(args...);
 	}
 
