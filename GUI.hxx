@@ -2,6 +2,6 @@
 
 namespace GUI
 {
-	bool IsOpen();
+	inline bool isOpen = true;
 	void Render();
 }

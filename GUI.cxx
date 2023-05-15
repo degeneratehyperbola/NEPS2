@@ -8,23 +8,15 @@
 #include "Globals.hxx"
 #include "Helpers.hxx"
 
-static bool s_isGUIOpen = true;
-
 static bool s_isDemoWindowOpen = true;
 static bool s_isDebugWindowOpen = true;
 
 void RenderDebugWindow();
 void RenderContextMenu();
 
-bool GUI::IsOpen() { return s_isGUIOpen; }
-
 void GUI::Render()
 {
-	// Handle menu toggle logic
-	if (ImGui::IsKeyPressed(ImGuiKey_Delete, false))
-		s_isGUIOpen = !s_isGUIOpen;
-
-	if (!s_isGUIOpen) return;
+	if (!isOpen) return;
 
 	// Context menu logic
 	if (!ImGui::GetIO().WantCaptureMouse && ImGui::IsMouseClicked(ImGuiMouseButton_Right))

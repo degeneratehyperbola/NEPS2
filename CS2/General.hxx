@@ -8,8 +8,8 @@ namespace CS2
 	void SetupInterfaces();
 
 	void SetRelativeMouseMode(bool enabled);
-	void EnableMouseCapture(bool enabled);
-	void SetMousePos(int x, int y);
+	void SetMouseCapture(bool enabled);
+	void WarpMouseInWindow(int x, int y);
 
 	inline IInputSystem* InputSystem;
 	inline IEngineClient* EngineClient;

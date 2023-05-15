@@ -31,8 +31,6 @@ HRESULT WINAPI Callbacks::Present(IDXGISwapChain* pSwapChain, UINT syncInterval,
 		// We do not want to create any files inside the game folder (OwO') !!!
 		io.IniFilename = nullptr;
 		io.LogFilename = nullptr;
-		
-		io.BackendFlags &= ~ImGuiBackendFlags_HasMouseCursors; // Disable mouse cursor changes as they're handled by the game
 
 		g_bImGuiInitialized = true;
 	}
@@ -41,22 +39,19 @@ HRESULT WINAPI Callbacks::Present(IDXGISwapChain* pSwapChain, UINT syncInterval,
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	GUI::Render();
-
-	// Show mouse cursor when GUI is open, otherwise restore to previous state
-	if (GUI::IsOpen())
+	// Unlock cursor when GUI is open, otherwise restore polling
+	if (GUI::isOpen)
 	{
 		CS2::SetRelativeMouseMode(false);
-		CS2::EnableWindowPolling(false);
+		CS2::SetMouseCapture(false);
 	}
 	else if (CS2::InputSystem->IsRelativeMouseMode())
 	{
 		CS2::SetRelativeMouseMode(true);
-		CS2::EnableWindowPolling(true);
-		int w, h;
-		CS2::EngineClient->GetScreenSize(w, h);
-		CS2::SetMousePos(w / 2, h / 2);
+		CS2::SetMouseCapture(true);
 	}
+
+	GUI::Render();
 
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -78,42 +73,77 @@ LRESULT WINAPI Callbacks::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 {
 	ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 
-	if (uMsg == WM_KEYDOWN && wParam == VK_END)
-		NEPS::Unload();
-
-	// Disable all input if GUI is open
-	if (GUI::IsOpen())
+	if (uMsg == WM_KEYDOWN)
 	{
-		switch (uMsg)
+		switch (wParam)
 		{
-			case WM_MOUSEMOVE:
-			case WM_NCMOUSEMOVE:
-			case WM_MOUSELEAVE:
-			case WM_NCMOUSELEAVE:
-			case WM_LBUTTONDOWN:
-			case WM_LBUTTONDBLCLK:
-			case WM_RBUTTONDOWN:
-			case WM_RBUTTONDBLCLK:
-			case WM_MBUTTONDOWN:
-			case WM_MBUTTONDBLCLK:
-			case WM_XBUTTONDOWN:
-			case WM_XBUTTONDBLCLK:
-			case WM_LBUTTONUP:
-			case WM_RBUTTONUP:
-			case WM_MBUTTONUP:
-			case WM_XBUTTONUP:
-			case WM_MOUSEWHEEL:
-			case WM_MOUSEHWHEEL:
-			case WM_KEYDOWN:
-			case WM_KEYUP:
-			case WM_SYSKEYDOWN:
-			case WM_SYSKEYUP:
-			case WM_SETFOCUS:
-			case WM_KILLFOCUS:
-			case WM_CHAR:
-			case WM_DEVICECHANGE:
-				return 1;
+		case VK_END:
+			// Panic key
+			NEPS::Unload();
+			break;
+
+		case VK_INSERT:
+		case VK_DELETE:
+			// Menu toggle key
+			GUI::isOpen = !GUI::isOpen;
+
+			// Place cursor in the center for convenience
+			if (GUI::isOpen && CS2::InputSystem->IsRelativeMouseMode())
+			{
+				int w, h;
+				CS2::EngineClient->GetScreenSize(w, h);
+				CS2::WarpMouseInWindow(w / 2, h / 2);
+			}
+
+			break;
 		}
+	}
+
+	// SDL2 unimplementation TwT
+	// SDL2 begone!! Unimplement!!1!
+	// It's everywhere
+	switch (uMsg)
+	{
+	case WM_KEYDOWN:
+	case WM_KEYUP:
+	case WM_SYSKEYDOWN:
+	case WM_SYSKEYUP:
+	case WM_CHAR:
+		if (GUI::isOpen && !ImGui::GetIO().WantCaptureKeyboard)
+			break;
+
+	case WM_SETFOCUS:
+	case WM_KILLFOCUS:
+	case WM_DEVICECHANGE:
+
+	case WM_MOUSEMOVE:
+	case WM_MOUSELEAVE:
+	case WM_NCMOUSEMOVE:
+	case WM_NCMOUSELEAVE:
+
+	case WM_LBUTTONDOWN:
+	case WM_LBUTTONUP:
+	case WM_LBUTTONDBLCLK:
+
+	case WM_MBUTTONDOWN:
+	case WM_MBUTTONUP:
+	case WM_MBUTTONDBLCLK:
+
+	case WM_RBUTTONDOWN:
+	case WM_RBUTTONUP:
+	case WM_RBUTTONDBLCLK:
+
+	case WM_XBUTTONDOWN:
+	case WM_XBUTTONUP:
+	case WM_XBUTTONDBLCLK:
+
+	case WM_MOUSEWHEEL:
+	case WM_MOUSEHWHEEL:
+
+	case WM_SETCURSOR:
+		if (GUI::isOpen && !MemorySearch::IsInBounds(g_hModule, (uintptr_t)_ReturnAddress()))
+			return ERROR_SUCCESS;
+		break;
 	}
 
 	return CallWindowProcW(g_pOriginalWndProc, hWnd, uMsg, wParam, lParam);
