@@ -74,11 +74,32 @@ void RenderDebugWindow()
 {
 	if (!s_isDebugWindowOpen) return;
 
-	if (ImGui::CollapsingHeader("Game Interfaces Tests"))
+	if (ImGui::CollapsingHeader("Game interfaces tests"))
 	{
-		// if (ImGui::TreeNode("Input System [" _STRINGIFY(CS2::IInputSystem) "]"))
-		// {
-		// 	ImGui::TreePop();
-		// }
+		if (ImGui::TreeNode("Input System [" _STRINGIFY(CS2::IInputSystem) "]"))
+		{
+			ImGui::BeginDisabled();
+			ImGui::Checkbox("Want to capture mouse", &CS2::InputSystem->IsRelativeMouseMode());
+			ImGui::EndDisabled();
+
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("Engine Client [" _STRINGIFY(CS2::IEngineClient) "]"))
+		{
+			ImGui::BeginDisabled();
+			bool dummy[] = {
+				CS2::EngineClient->IsConnected(),
+				CS2::EngineClient->IsInGame()
+			};
+			ImGui::Checkbox("Is connected", dummy);
+			ImGui::Checkbox("Is in game", dummy + 1);
+			ImGui::EndDisabled();
+
+			ImGui::Text("Level name: %s", CS2::EngineClient->GetLevelName());
+			ImGui::Text("Level name short: %s", CS2::EngineClient->GetLevelNameShort());
+
+			ImGui::TreePop();
+		}
 	}
 }
