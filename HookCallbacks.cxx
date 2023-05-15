@@ -39,18 +39,6 @@ HRESULT WINAPI Callbacks::Present(IDXGISwapChain* pSwapChain, UINT syncInterval,
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	// Unlock cursor when GUI is open, otherwise restore polling
-	if (GUI::isOpen)
-	{
-		CS2::SetRelativeMouseMode(false);
-		CS2::SetMouseCapture(false);
-	}
-	else if (CS2::InputSystem->IsRelativeMouseMode())
-	{
-		CS2::SetRelativeMouseMode(true);
-		CS2::SetMouseCapture(true);
-	}
-
 	GUI::Render();
 
 	ImGui::Render();
@@ -73,35 +61,9 @@ LRESULT WINAPI Callbacks::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 {
 	ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 
-	if (uMsg == WM_KEYDOWN)
-	{
-		switch (wParam)
-		{
-		case VK_END:
-			// Panic key
-			NEPS::Unload();
-			break;
-
-		case VK_INSERT:
-		case VK_DELETE:
-			// Menu toggle key
-			GUI::isOpen = !GUI::isOpen;
-
-			// Place cursor in the center for convenience
-			if (GUI::isOpen && CS2::InputSystem->IsRelativeMouseMode())
-			{
-				int w, h;
-				CS2::EngineClient->GetScreenSize(w, h);
-				CS2::WarpMouseInWindow(w / 2, h / 2);
-			}
-
-			break;
-		}
-	}
-
 	// SDL2 unimplementation TwT
 	// SDL2 begone!! Unimplement!!1!
-	// It's everywhere
+	// We capture some messages :3
 	switch (uMsg)
 	{
 	case WM_KEYDOWN:
@@ -109,8 +71,6 @@ LRESULT WINAPI Callbacks::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 	case WM_SYSKEYDOWN:
 	case WM_SYSKEYUP:
 	case WM_CHAR:
-		if (GUI::isOpen && !ImGui::GetIO().WantCaptureKeyboard)
-			break;
 
 	case WM_SETFOCUS:
 	case WM_KILLFOCUS:
@@ -141,8 +101,44 @@ LRESULT WINAPI Callbacks::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 	case WM_MOUSEHWHEEL:
 
 	case WM_SETCURSOR:
-		if (GUI::isOpen && !MemorySearch::IsInBounds(g_hModule, (uintptr_t)_ReturnAddress()))
-			return ERROR_SUCCESS;
+		// Our input handling
+		if (uMsg == WM_KEYDOWN)
+		{
+			if (wParam == VK_END)
+				NEPS::Unload();
+			else if (wParam == VK_INSERT || wParam == VK_DELETE)
+			{
+				GUI::isOpen = !GUI::isOpen;
+
+				// Place cursor in the center for convenience
+				if (GUI::isOpen && CS2::InputSystem->IsRelativeMouseMode())
+				{
+					int w, h;
+					CS2::EngineClient->GetScreenSize(w, h);
+					CS2::WarpMouseInWindow(w / 2, h / 2);
+				}
+			}
+		}
+
+		// Unlock cursor whenever we need it, otherwise restore polling
+		if (GUI::isOpen)
+		{
+			CS2::SetRelativeMouseMode(false);
+			CS2::SetMouseCapture(false);
+		}
+		else if (CS2::InputSystem->IsRelativeMouseMode())
+		{
+			CS2::SetRelativeMouseMode(true);
+			CS2::SetMouseCapture(true);
+		}
+
+		// Allow keyboard inputs unless we are capturing them
+		if (WM_KEYLAST >= uMsg && uMsg >= WM_KEYFIRST && !ImGui::GetIO().WantCaptureKeyboard)
+			break;
+
+		// Skip game's input handling and cursor changing if GUI is open
+		if (GUI::isOpen) return ERROR_SUCCESS;
+
 		break;
 	}
 
