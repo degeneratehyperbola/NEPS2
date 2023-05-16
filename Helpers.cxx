@@ -10,12 +10,13 @@
 // Self-destruction from a different thread :3
 void NEPS::Unload()
 {
-	GUI::isOpen = false;
+	// Restore mouse polling
 	if (CS2::InputSystem->IsRelativeMouseMode())
 	{
 		CS2::SetRelativeMouseMode(true);
 		CS2::SetMouseCapture(true);
 	}
+
 	CloseHandle(CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)FreeLibrary, g_hModule, 0, nullptr));
 }
 
