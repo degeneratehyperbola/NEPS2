@@ -1,10 +1,11 @@
 {
 	"configurations": [
 		{
-			"name": "Win32",
+			"name": "Debug",
 			"includePath": [
+				"${workspaceFolder}/",
 				"${workspaceFolder}/include/",
-				"${env.VK_SDK_PATH}/include/"
+				"${env.VK_SDK_PATH}/Include/"
 			],
 			"defines": [
 				"_DEBUG",
@@ -14,7 +15,9 @@
 			"windowsSdkVersion": "10.0.22000.0",
 			"compilerPath": "cl.exe",
 			"intelliSenseMode": "windows-msvc-x64",
-			"cppStandard": "c++23"
+			"cppStandard": "c++23",
+			"cStandard": "c23",
+			"configurationProvider": "ms-vscode.cmake-tools"
 		}
 	],
 	"version": 4
