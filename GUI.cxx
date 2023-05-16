@@ -1,7 +1,6 @@
 #include "GUI.hxx"
 
-#include <imgui/imgui.h>
-#include <MemoryTools.hxx>
+#include <PCH.h>
 
 #include "CS2/General.hxx"
 

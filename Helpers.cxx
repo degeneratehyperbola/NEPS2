@@ -1,7 +1,6 @@
 #include "Helpers.hxx"
 
-#include <Windows.h>
-#include <stdio.h>
+#include <PCH.h>
 
 #include "CS2/General.hxx"
 

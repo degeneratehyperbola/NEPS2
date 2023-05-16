@@ -1,9 +1,5 @@
 #include "General.hxx"
 
-#include <Windows.h>
-
-#include <MemoryTools.hxx>
-
 void CS2::SetRelativeMouseMode(bool enabled)
 {
 	auto fn = EXTERNAL_PROC("SDL2", "SDL_SetRelativeMouseMode", int, (bool));
