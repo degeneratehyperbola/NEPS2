@@ -1,82 +1,12 @@
 {
-	// See https://go.microsoft.com/fwlink/?LinkId=733558 for the documentation about the tasks.json format
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "(cl) Build in Debug",
-			"type": "shell",
-			"command": "cl",
+			"type": "cmake",
+			"label": "(cmake) Build",
+			"command": "build",
 			"group": "build",
 			"problemMatcher": "$msCompile",
-			"args": [
-				// Fuck yo stupid ass banner
-				"/nologo",
-
-				// C++ standard
-				"/std:c++latest",
-
-				// Create multithreaded debug DLL
-				"/MDd",
-
-				// Create debug DLL
-				"/LDd",
-
-				// Exception handler
-				"/EHsc",
-
-				// Generate complete debugging information
-				"/Zi",
-
-				// No optimizations
-				"/Od",
-
-				// Require AVX for intrinsics
-				"/arch:AVX",
-				
-				// Use `__vectorcall` by default
-				"/Gv",
-
-				// Linker inputs
-				"d3d11.lib",
-				"dxgi.lib",
-				"$env:VK_SDK_PATH/Lib/vulkan-1.lib",
-
-				// Defines
-				"/D",
-				"_DEBUG",
-				
-				// Source file inputs
-				// Stupid fuxking piece of shit
-				// Find your stupid source files yourself, you stupid useless compiler
-				"$(Get-ChildItem","-Include","*.cpp,*.c,*.cxx","-File","-Recurse).FullName",
-				
-				// Includes
-				"/I",
-				"./include/",
-				"/I",
-				"$env:VK_SDK_PATH/Include/",
-				
-				// Intermediate shit
-				"/Fo:",
-				"./build/intermediate/",
-
-				// Program database
-				"/Fd:",
-				"./build/",
-
-				// Output
-				"/Fe:",
-				"./build/${workspaceFolderBasename}.debug.dll",
-
-				// Linker args
-				"/link",
-				
-				// No incremental linking
-				"/INCREMENTAL:NO",
-
-				// 64-bit target
-				"/MACHINE:X64"
-			]
 		}
 	]
 }
