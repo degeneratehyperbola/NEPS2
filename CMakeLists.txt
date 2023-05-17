@@ -19,32 +19,10 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories($ENV{VK_SDK_PATH}/Include)
 
-# Disable compiler optimizations and enable debug info
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-	if(MSVC)
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Od /Zi")
-	endif()
-
-	add_definitions(-D_DEBUG)
-# Enable compiler optimizations and loop parallelization
-elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-	if(MSVC)
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /2d /Qpar")
-	endif()
-endif()
-
-# Set default function calling convention to `__vectorcall` to speed up calls
+# We need to remove this cl.exe argument because it appears to be predefined
 if(MSVC)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Gv")
+	string(REPLACE "/EHsc" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 endif()
-
-# Disable exceptions
-# We need to replace the cl.exe argument because it appears to be predefined
-if(MSVC)
-	string(REPLACE "/EHsc" "/EHs-c-" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-endif()
-
-add_definitions(-D_HAS_EXCEPTIONS=0)
 
 # Find source files recursively
 file(GLOB SOURCE_FILES
@@ -66,13 +44,29 @@ list(APPEND SOURCE_FILES ${SOURCE_FILES2})
 # DLL debug target
 add_library(MAIN_DLL SHARED ${SOURCE_FILES})
 
+# Pre-processor macro definitions
+target_compile_definitions(MAIN_DLL PRIVATE
+	$<$<CONFIG:Debug>:_DEBUG>
+	$<$<CONFIG:Release>:NDEBUG>
+	_HAS_EXCEPTIONS=0
+)
+
+# Set compiler options
+if(MSVC)
+	target_compile_options(MAIN_DLL PRIVATE
+		$<$<CONFIG:Debug>:/Od /Zi>
+		$<$<CONFIG:Release>:/2d /Qpar>
+		/Gv /EHs-c-
+	)
+endif()
+
 # Set the C++ standard
 set_target_properties(MAIN_DLL PROPERTIES
 	CXX_STANDARD 23
 	CXX_STANDARD_REQUIRED TRUE
 )
 
-# Add the static libraries
+# Link static libraries
 if(MSVC)
 	target_link_libraries(MAIN_DLL d3d11.lib)
 	target_link_libraries(MAIN_DLL $ENV{VK_SDK_PATH}/Lib/vulkan-1.lib)
@@ -80,6 +74,6 @@ endif()
 
 # Set the output filename
 set_target_properties(MAIN_DLL PROPERTIES
-	OUTPUT_NAME "NEPS2.debug"
+	OUTPUT_NAME "NEPS2"
 	SUFFIX ".dll"
 )
