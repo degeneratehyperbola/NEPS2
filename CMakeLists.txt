@@ -19,11 +19,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories($ENV{VK_SDK_PATH}/Include)
 
-# We need to remove this cl.exe argument because it appears to be predefined
-if(MSVC)
-	string(REPLACE "/EHsc" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-endif()
-
 # Find source files recursively
 file(GLOB SOURCE_FILES
 	${CMAKE_CURRENT_SOURCE_DIR}/*.cxx
@@ -48,7 +43,6 @@ add_library(MAIN_DLL SHARED ${SOURCE_FILES})
 target_compile_definitions(MAIN_DLL PRIVATE
 	$<$<CONFIG:Debug>:_DEBUG>
 	$<$<CONFIG:Release>:NDEBUG>
-	_HAS_EXCEPTIONS=0
 )
 
 # Set compiler options
@@ -56,7 +50,7 @@ if(MSVC)
 	target_compile_options(MAIN_DLL PRIVATE
 		$<$<CONFIG:Debug>:/Od /Zi>
 		$<$<CONFIG:Release>:/2d /Qpar>
-		/Gv /EHs-c-
+		/Gv
 	)
 endif()
 
