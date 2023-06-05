@@ -14,6 +14,6 @@ namespace CS2
 	class IConVarIndex
 	{
 	public:
-		VIRTUAL_METHOD(36, ConVar*, GetVar, (size_t index), (this, index));
+		VIRTUAL_METHOD(36, ConVar*, GetVar, (size_t index), (this, index)); // Crashes over index ~5000
 	};
 }
