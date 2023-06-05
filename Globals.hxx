@@ -1,6 +1,6 @@
 #pragma once
 
-#include <PCH.h>
+#include <PCH.hpp>
 
 inline HMODULE g_hModule; // General globals | Handle to this DLL
 inline HWND g_hWnd; // General globals | Handle to the game's window

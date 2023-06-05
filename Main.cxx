@@ -1,4 +1,4 @@
-#include <PCH.h>
+#include <PCH.hpp>
 
 #include "CS2/General.hxx"
 

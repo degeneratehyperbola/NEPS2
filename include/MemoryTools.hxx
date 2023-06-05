@@ -5,6 +5,8 @@
 #include <Windows.h>
 #include <cstdint>
 
+using byte = uint8_t;
+
 #define _STRINGIFYX(x) #x
 #define _STRINGIFY(x) _STRINGIFYX(x)
 
@@ -27,13 +29,11 @@ inline returnType name params \
 	return VirtualMethod::Call<idx, returnType>passedArgs; \
 }
 
-#define PROPERTY(type, name, offset) \
+#define PROPERTY(offset, type, name) \
 inline type name() { return *reinterpret_cast<type*>((uintptr_t)this + offset); }
 
-#define PROPERTY_REF(type, name, offset) \
+#define PROPERTY_REF(offset, type, name) \
 inline type& name() { return *reinterpret_cast<type*>((uintptr_t)this + offset); }
-
-using byte = uint8_t;
 
 namespace VirtualMethod
 {

@@ -1,13 +1,13 @@
 #pragma once
 
-#include <PCH.h>
+#include <PCH.hpp>
 
 namespace CS2
 {
 	class IInputSystem
 	{
 	public:
-		PROPERTY(bool, IsRelativeMouseMode, 79);
-		PROPERTY(void*, GetSDLWindow, 9840);
+		PROPERTY(79, bool, IsRelativeMouseMode);
+		PROPERTY(9840, void*, GetSDLWindow);
 	};
 }

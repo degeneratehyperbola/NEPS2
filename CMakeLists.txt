@@ -12,7 +12,7 @@ if (NOT MSVC)
 endif()
 
 # Set the precompiled header file
-set(PCH_FILE "PCH.h")
+set(PCH_FILE "PCH.hpp")
 
 # Add root directory and used include directories as include search paths
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})

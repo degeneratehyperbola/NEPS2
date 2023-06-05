@@ -1,6 +1,6 @@
 #pragma once
 
-#include <PCH.h>
+#include <PCH.hpp>
 
 #include "SDK/interfaces/InputSystem.hxx"
 #include "SDK/interfaces/EngineClient.hxx"
