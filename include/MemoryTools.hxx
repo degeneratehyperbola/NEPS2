@@ -24,18 +24,21 @@ public:
 #define VIRTUAL_METHOD(idx, returnType, name, params, passedArgs) \
 inline returnType name params \
 { \
-	return VirtualMethod::call<idx, returnType>passedArgs; \
+	return VirtualMethod::Call<idx, returnType>passedArgs; \
 }
 
 #define PROPERTY(type, name, offset) \
-type& name() { return *reinterpret_cast<type*>((uintptr_t)this + offset); }
+inline type name() { return *reinterpret_cast<type*>((uintptr_t)this + offset); }
+
+#define PROPERTY_REF(type, name, offset) \
+inline type& name() { return *reinterpret_cast<type*>((uintptr_t)this + offset); }
 
 using byte = uint8_t;
 
 namespace VirtualMethod
 {
 	template <size_t Idx, typename Ret, typename... Args>
-	constexpr Ret call(void* classBase, Args... args)
+	constexpr Ret Call(void* classBase, Args... args)
 	{
 		void** vmt = GET_VTABLE(classBase);
 		auto virtualMethod = reinterpret_cast<Ret(__thiscall*)(void*, Args...)>(vmt[Idx]);
