@@ -77,8 +77,11 @@ void RenderDebugWindow()
 	{
 		if (ImGui::TreeNode("Input System [" _STRINGIFY(CS2::IInputSystem) "]"))
 		{
+			bool dummy[] = {
+				CS2::InputSystem->IsRelativeMouseMode()
+			};
 			ImGui::BeginDisabled();
-			ImGui::Checkbox("Want to capture mouse", &CS2::InputSystem->IsRelativeMouseMode());
+			ImGui::Checkbox("Want to capture mouse", dummy);
 			ImGui::EndDisabled();
 
 			ImGui::TreePop();
@@ -86,17 +89,52 @@ void RenderDebugWindow()
 
 		if (ImGui::TreeNode("Engine Client [" _STRINGIFY(CS2::IEngineClient) "]"))
 		{
-			ImGui::BeginDisabled();
 			bool dummy[] = {
 				CS2::EngineClient->IsConnected(),
 				CS2::EngineClient->IsInGame()
 			};
+			ImGui::BeginDisabled();
 			ImGui::Checkbox("Is connected", dummy);
 			ImGui::Checkbox("Is in game", dummy + 1);
 			ImGui::EndDisabled();
 
 			ImGui::Text("Level name: %s", CS2::EngineClient->GetLevelName());
 			ImGui::Text("Level name short: %s", CS2::EngineClient->GetLevelNameShort());
+
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("Console Variable Index [" _STRINGIFY(CS2::IConVarIndex) "]"))
+		{
+			static CS2::ConVar* var;
+			static size_t idx;
+
+			if (ImGui::InputInt("Variable index", (int*)&idx))
+				var = CS2::ConVarIndex->GetVar(idx);
+
+			ImGui::SeparatorText("Info");
+			if (var)
+			{
+				ImGui::Text("Name: %s", var->Name());
+
+				if (ImGui::BeginTabBar("##VarValues"))
+				{
+					if (ImGui::BeginTabItem("Integer"))
+					{
+						ImGui::Text("%i", var->GetInt());
+						ImGui::EndTabItem();
+					}
+
+					if (ImGui::BeginTabItem("Float"))
+					{
+						ImGui::Text("%f", var->GetFloat());
+						ImGui::EndTabItem();
+					}
+
+					ImGui::EndTabBar();
+				}
+			}
+			else ImGui::TextDisabled("nullptr");
 
 			ImGui::TreePop();
 		}
