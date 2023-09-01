@@ -1,9 +1,16 @@
 // Built-in
 #include <stdio.h>
+#include <Windows.h>
 
-// Rendering
+// Standard framework
+#include <list>
+#include <filesystem>
+
+// DirectX 11
 #include <d3d11.h>
-#include <vulkan/vulkan.h>
+
+// Vulkan
+#include <vulkan/vulkan.hpp>
 
 // ImGui
 #include <imgui/imgui.h>
@@ -14,10 +21,14 @@
 // MinHook
 #include <minhook/MinHook.h>
 
+// Pybind11
+#include <pybind11/pybind11.h>
+#include <pybind11/embed.h>
+
+// Python
+#include <Python.h>
+
 // Custom tools
 #include <MemoryTools.hxx>
 #include <HookManager.hxx>
 #include <ScriptManager.hxx>
-
-// Standard framework
-#include <list>
