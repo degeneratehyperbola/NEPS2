@@ -19,16 +19,20 @@ public:
 		MH_Uninitialize();
 	}
 
-	HookManager() = delete;
+
+	HookManager() = default;
 
 	// HookManager is used for hooking and managing a single target function
 	template<typename T, typename C>
-	HookManager(T fnTarget, C fnCallback) : m_fnTarget{ (void*)fnTarget }, m_fnCallback{ (void*)fnCallback }, m_fnOriginal{ nullptr }
+	HookManager(T fnTarget, C fnCallback)
 	{
-		// Use Hook() to initialize
+		m_fnTarget = (void*)fnTarget;
+		m_fnCallback = (void*)fnCallback;
+		m_fnOriginal = nullptr;
 	}
 
 	~HookManager() { Unhook(); }
+
 
 	bool Hook()
 	{
@@ -61,6 +65,7 @@ public:
 		auto originalFunction = reinterpret_cast<Ret(*)(Args...)>(IsHooked() ? m_fnOriginal : m_fnTarget);
 		return originalFunction(args...);
 	}
+
 
 private:
 	void* m_fnTarget;
