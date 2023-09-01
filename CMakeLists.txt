@@ -1,10 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 project(NEPS2)
 
-# Check for Vulkan SDK
-if(NOT DEFINED ENV{VK_SDK_PATH})
-	message(FATAL_ERROR "Vulkan SDK not found. I ain't compiling without it, sowwy :3")
-endif()
+# Required packages
+find_package(Vulkan REQUIRED)
 find_package(Python 3.10 REQUIRED COMPONENTS Interpreter Development)
 
 # Enforce MSVC
@@ -18,7 +16,9 @@ set(PCH_FILE "PCH.hpp")
 # Add root directory and used include directories as include search paths
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories($ENV{VK_SDK_PATH}/Include)
+
+# Add include dirs after find_package beautifully fails to
+include_directories(${Vulkan_INCLUDE_DIRS})
 include_directories(${Python_INCLUDE_DIRS})
 
 # Find source files recursively
@@ -67,6 +67,7 @@ set_target_properties(NEPS2_DLL PROPERTIES
 if(MSVC)
 	target_link_libraries(NEPS2_DLL d3d11.lib)
 	# find_package apparently fails to do this
+	target_link_libraries(NEPS2_DLL ${Vulkan_LIBRARIES})
 	target_link_libraries(NEPS2_DLL ${Python_LIBRARIES})
 endif()
 
