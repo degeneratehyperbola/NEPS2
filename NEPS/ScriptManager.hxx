@@ -1,24 +1,26 @@
 #pragma once
 
+#include <PCH.hpp>
 
-#include <filesystem>
 
 // ScriptManager is used to load and track scripts as well as providing them with an individual context and exposing the API
 // Currently used interpreter: Python3
-class ScriptManager
+namespace ScriptManager
 {
-public:
-	static bool Setup()
+	struct Script
 	{
-		// Init python interpreter here
+		std::filesystem::path Path;
+		bool Loaded;
+	};
+	
+
+	void Setup()
+	{
+		pybind11::initialize_interpreter();
 	}
 
 	static void Cleanup()
 	{
-		// Uninit python interpreter here
+		pybind11::finalize_interpreter();
 	}
-
-private:
-	std::filesystem::path m_Path;
-	bool m_bIsLoaded;
-};
+}
