@@ -6,6 +6,7 @@
 #include "SDK/interfaces/EngineClient.hxx"
 #include "SDK/interfaces/ConVar.hxx"
 
+
 namespace CS2
 {
 	void SetupInterfaces();

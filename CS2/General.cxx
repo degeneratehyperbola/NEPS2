@@ -1,20 +1,21 @@
 #include "General.hxx"
 
+
 void CS2::SetRelativeMouseMode(bool enabled)
 {
-	static auto fn = EXTERNAL_PROC("SDL2", "SDL_SetRelativeMouseMode", int, (bool));
+	static auto fn = EXTERNAL_PROC("SDL3", "SDL_SetRelativeMouseMode", int, (bool));
 	if (fn) fn(enabled);
 }
 
 void CS2::SetMouseCapture(bool enabled)
 {
-	static auto fn = EXTERNAL_PROC("SDL2", "SDL_SetWindowMouseGrab", void, (void*, bool));
+	static auto fn = EXTERNAL_PROC("SDL3", "SDL_SetWindowMouseGrab", void, (void*, bool));
 	if (fn) fn(InputSystem->GetSDLWindow(), enabled);
 }
 
 void CS2::WarpMouseInWindow(int x, int y)
 {
-	static auto fn = EXTERNAL_PROC("SDL2", "SDL_WarpMouseInWindow", void, (void*, int, int));
+	static auto fn = EXTERNAL_PROC("SDL3", "SDL_WarpMouseInWindow", void, (void*, int, int));
 	if (fn) fn(InputSystem->GetSDLWindow(), x, y);
 }
 
