@@ -3,12 +3,11 @@
 #include <PCH.hpp>
 
 #include "CS2/General.hxx"
+#include "General.hxx"
 
-#include "Globals.hxx"
-#include "Helpers.hxx"
-#include "GUI.hxx"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
+
 
 // DirectX11 | Called each render frame
 HRESULT WINAPI Callbacks::Present(IDXGISwapChain* pSwapChain, UINT syncInterval, UINT flags)
@@ -97,16 +96,19 @@ LRESULT WINAPI Callbacks::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 
 	case WM_SETCURSOR:
 		// Our input handling
-		if (uMsg == WM_KEYDOWN)
+		if (uMsg == WM_KEYDOWN && !(lParam & (1 << 30)))
 		{
+			NEPS::InputEvent::KeyDown(wParam);
+
 			if (wParam == VK_END)
 				NEPS::Unload();
+			// Menu toggle buttons
 			else if (wParam == VK_INSERT || wParam == VK_DELETE)
 			{
 				GUI::isOpen = !GUI::isOpen;
 
 				// Place cursor in the center for convenience
-				if (GUI::isOpen && CS2::InputSystem->IsRelativeMouseMode())
+				if (GUI::isOpen && CS2::InputSystem->WantToCaptureMouse())
 				{
 					int w, h;
 					CS2::EngineClient->GetScreenSize(w, h);
@@ -115,13 +117,16 @@ LRESULT WINAPI Callbacks::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 			}
 		}
 
+		if (uMsg == WM_KEYUP)
+			NEPS::InputEvent::KeyUp(wParam);
+
 		// Unlock cursor whenever we need it, otherwise restore polling
 		if (GUI::isOpen)
 		{
 			CS2::SetRelativeMouseMode(false);
 			CS2::SetMouseCapture(false);
 		}
-		else if (CS2::InputSystem->IsRelativeMouseMode())
+		else if (CS2::InputSystem->WantToCaptureMouse())
 		{
 			CS2::SetRelativeMouseMode(true);
 			CS2::SetMouseCapture(true);

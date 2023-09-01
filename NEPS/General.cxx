@@ -1,4 +1,4 @@
-#include "Helpers.hxx"
+#include "General.hxx"
 
 #include <PCH.hpp>
 
@@ -7,11 +7,12 @@
 #include "Globals.hxx"
 #include "GUI.hxx"
 
+
 // Self-destruction from a different thread :3
 void NEPS::Unload()
 {
 	// Restore mouse polling
-	if (CS2::InputSystem->IsRelativeMouseMode())
+	if (CS2::InputSystem->WantToCaptureMouse())
 	{
 		CS2::SetRelativeMouseMode(true);
 		CS2::SetMouseCapture(true);
@@ -21,7 +22,7 @@ void NEPS::Unload()
 }
 
 // Show a message box and unload
-void NEPS::Error(const char* msgBoxTitle, const char* msgBoxContentFmt, ...)
+int NEPS::Error(const char* msgBoxTitle, const char* msgBoxContentFmt, ...)
 {
 	char content[1024];
 	va_list args;
@@ -32,6 +33,8 @@ void NEPS::Error(const char* msgBoxTitle, const char* msgBoxContentFmt, ...)
 	char title[256];
 	sprintf_s(title, "NEPS2 | %s", msgBoxTitle);
 
-	MessageBoxA(nullptr, content, title, MB_ICONERROR | MB_RETRYCANCEL);
+	MessageBoxA(nullptr, content, title, MB_ICONERROR | MB_OK);
 	Unload();
+
+	return 0; // It returns FALSE just for syntactic sugar
 }

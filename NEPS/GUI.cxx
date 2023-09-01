@@ -3,15 +3,15 @@
 #include <PCH.hpp>
 
 #include "CS2/General.hxx"
+#include "General.hxx"
 
-#include "Globals.hxx"
-#include "Helpers.hxx"
 
 static bool s_isDemoWindowOpen = true;
 static bool s_isDebugWindowOpen = true;
 
 void RenderDebugWindow();
 void RenderContextMenu();
+
 
 void GUI::Render()
 {
@@ -73,12 +73,12 @@ void RenderDebugWindow()
 {
 	if (!s_isDebugWindowOpen) return;
 
-	if (ImGui::CollapsingHeader("Game interfaces tests"))
+	if (ImGui::CollapsingHeader("Game interface tests"))
 	{
-		if (ImGui::TreeNode("Input System [" _STRINGIFY(CS2::IInputSystem) "]"))
+		if (ImGui::TreeNode("Input System [" STRINGIFY(CS2::IInputSystem) "]"))
 		{
 			bool dummy[] = {
-				CS2::InputSystem->IsRelativeMouseMode()
+				CS2::InputSystem->WantToCaptureMouse()
 			};
 			ImGui::BeginDisabled();
 			ImGui::Checkbox("Want to capture mouse", dummy);
@@ -87,7 +87,7 @@ void RenderDebugWindow()
 			ImGui::TreePop();
 		}
 
-		if (ImGui::TreeNode("Engine Client [" _STRINGIFY(CS2::IEngineClient) "]"))
+		if (ImGui::TreeNode("Engine Client [" STRINGIFY(CS2::IEngineClient) "]"))
 		{
 			bool dummy[] = {
 				CS2::EngineClient->IsConnected(),
@@ -104,7 +104,7 @@ void RenderDebugWindow()
 			ImGui::TreePop();
 		}
 
-		if (ImGui::TreeNode("Console Variable Index [" _STRINGIFY(CS2::IConVarIndex) "]"))
+		if (ImGui::TreeNode("Console Variable Index [" STRINGIFY(CS2::IConVarIndex) "]"))
 		{
 			static CS2::ConVar* var;
 			static size_t idx;
