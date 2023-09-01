@@ -5,6 +5,7 @@
 #include <vector>
 #include <tuple>
 
+
 std::tuple<uintptr_t, ptrdiff_t> GetBounds(HMODULE hModule)
 {
 	MODULEINFO moduleInfo;

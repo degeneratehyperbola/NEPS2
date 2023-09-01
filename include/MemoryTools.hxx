@@ -5,17 +5,37 @@
 #include <Windows.h>
 #include <cstdint>
 
+
 using byte = uint8_t;
 
-#define _STRINGIFYX(x) #x
-#define _STRINGIFY(x) _STRINGIFYX(x)
 
-#define _CONCATX(x, y) x##y
-#define _CONCAT(x, y) _CONCATX(x, y)
+// Who THE FUCK defines MY shit?
+#ifdef STRINGIFY
+#undef STRINGIFY
+#endif
+
+#ifdef STRINGIFYX
+#undef STRINGIFYX
+#endif
+
+#ifdef CONCAT
+#undef CONCAT
+#endif
+
+#ifdef CONCATX
+#undef CONCATX
+#endif
+
+#define STRINGIFYX(x) #x
+#define STRINGIFY(x) STRINGIFYX(x)
+
+#define CONCATX(x, y) x##y
+#define CONCAT(x, y) CONCATX(x, y)
+
 
 #define PAD(size) \
 private: \
-    byte _CONCAT(_pad, __COUNTER__)[size]; \
+    byte CONCAT(_pad, __COUNTER__)[size]; \
 public:
 
 #define EXTERNAL_PROC(moduleName, procName, returnType, params) \
@@ -35,6 +55,7 @@ inline type name() { return *reinterpret_cast<type*>((uintptr_t)this + offset); 
 #define PROPERTY_REF(offset, type, name) \
 inline type& name() { return *reinterpret_cast<type*>((uintptr_t)this + offset); }
 
+
 namespace VirtualMethod
 {
 	template <size_t Idx, typename Ret, typename... Args>
@@ -45,6 +66,7 @@ namespace VirtualMethod
 		return virtualMethod(classBase, args...);
 	}
 }
+
 
 namespace MemorySearch
 {
