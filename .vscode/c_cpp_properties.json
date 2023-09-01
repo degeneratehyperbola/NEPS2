@@ -1,8 +1,13 @@
 {
-	"configurations": [
-		{
-			"configurationProvider": "ms-vscode.cmake-tools"
-		}
-	],
-	"version": 4
+    "configurations": [
+        {
+            "name": "Win32",
+            "configurationProvider": "ms-vscode.cmake-tools",
+            "includePath": [
+                "${default}",
+                "${workspaceFolder}/include"
+            ]
+        }
+    ],
+    "version": 4
 }
