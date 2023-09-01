@@ -3,6 +3,7 @@
         {
             "name": "Win32",
             "configurationProvider": "ms-vscode.cmake-tools",
+			"compileCommands": "${config:cmake.buildDirectory}/compile_commands.json",
             "includePath": [
                 "${default}",
                 "${workspaceFolder}/include"
