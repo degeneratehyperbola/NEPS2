@@ -32,13 +32,12 @@ file(GLOB_RECURSE SOURCE_FILES2
 	${CMAKE_CURRENT_SOURCE_DIR}/include/*.c
 	
 	${CMAKE_CURRENT_SOURCE_DIR}/CS2/*.cxx
-
-	${CMAKE_CURRENT_SOURCE_DIR}/python/*.cxx
+	${CMAKE_CURRENT_SOURCE_DIR}/NEPS/*.cxx
 )
 
 list(APPEND SOURCE_FILES ${SOURCE_FILES2})
 
-# DLL debug target
+# DLL target
 add_library(MAIN_DLL SHARED ${SOURCE_FILES})
 
 # Pre-processor macro definitions
