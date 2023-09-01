@@ -19,11 +19,11 @@ public:
 		MH_Uninitialize();
 	}
 
-	HookManager() = default;
+	HookManager() = delete;
 
 	// HookManager is used for hooking and managing a single target function
 	template<typename T, typename C>
-	HookManager(T pTarget, C pCallback) : m_pTarget{ (void*)pTarget }, m_pCallback{ (void*)pCallback }, m_pTrampoline{ nullptr }
+	HookManager(T fnTarget, C fnCallback) : m_fnTarget{ (void*)fnTarget }, m_fnCallback{ (void*)fnCallback }, m_fnOriginal{ nullptr }
 	{
 		// Use Hook() to initialize
 	}
@@ -32,12 +32,12 @@ public:
 
 	bool Hook()
 	{
-		if (!m_pTarget || !m_pCallback || IsHooked()) return false;
+		if (!m_fnTarget || !m_fnCallback || IsHooked()) return false;
 
-		if (MH_CreateHook(m_pTarget, m_pCallback, &m_pTrampoline) != MH_OK)
+		if (MH_CreateHook(m_fnTarget, m_fnCallback, &m_fnOriginal) != MH_OK)
 			return false;
 
-		if (MH_EnableHook(m_pTarget) != MH_OK)
+		if (MH_EnableHook(m_fnTarget) != MH_OK)
 			return false;
 
 		return true;
@@ -47,23 +47,23 @@ public:
 	{
 		if (IsHooked())
 		{
-			MH_DisableHook(m_pTarget);
-			MH_RemoveHook(m_pTarget);
-			m_pTrampoline = nullptr;
+			MH_DisableHook(m_fnTarget);
+			MH_RemoveHook(m_fnTarget);
+			m_fnOriginal = nullptr;
 		}
 	}
 
-	bool IsHooked() { return m_pTrampoline; }
+	bool IsHooked() { return m_fnOriginal; }
 
 	template<typename Ret, typename... Args>
 	Ret CallOriginal(Args... args)
 	{
-		auto originalFunction = reinterpret_cast<Ret(*)(Args...)>(IsHooked() ? m_pTrampoline : m_pTarget);
+		auto originalFunction = reinterpret_cast<Ret(*)(Args...)>(IsHooked() ? m_fnOriginal : m_fnTarget);
 		return originalFunction(args...);
 	}
 
 private:
-	void* m_pTarget;
-	void* m_pCallback;
-	void* m_pTrampoline;
+	void* m_fnTarget;
+	void* m_fnCallback;
+	void* m_fnOriginal;
 };
