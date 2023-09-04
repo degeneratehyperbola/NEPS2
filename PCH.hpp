@@ -31,4 +31,3 @@
 // Custom tools
 #include <MemoryTools.hxx>
 #include <HookManager.hxx>
-#include <ScriptManager.hxx>
