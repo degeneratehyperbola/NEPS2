@@ -5,6 +5,9 @@
 
 inline HMODULE g_hModule; // General globals | Handle to this DLL
 inline HWND g_hWnd; // General globals | Handle to the game's window
+inline fs::path g_dirProfile; // General globals | Profile directory path (configs and scripts)
+inline fs::path g_dirConfigs; // General globals | Config directory path 
+inline fs::path g_dirScripts; // General globals | Script directory path
 
 inline bool g_bIsUsingVulkan; // Rendering related globals
 inline bool g_bImGuiInitialized; // Rendering related globals | Is ImGui backend initialized

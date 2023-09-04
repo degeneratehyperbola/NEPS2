@@ -6,6 +6,8 @@
 #include <list>
 #include <filesystem>
 
+namespace fs = std::filesystem;
+
 // DirectX 11
 #include <d3d11.h>
 
@@ -24,6 +26,8 @@
 // Pybind11
 #include <pybind11/pybind11.h>
 #include <pybind11/embed.h>
+
+namespace py = pybind11;
 
 // Python
 #include <Python.h>
