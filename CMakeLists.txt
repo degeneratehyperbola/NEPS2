@@ -53,7 +53,7 @@ if(MSVC)
 	target_compile_options(NEPS2_DLL PRIVATE
 		$<$<CONFIG:Debug>:/Od /Zi>
 		$<$<CONFIG:Release>:/2d /Qpar>
-		/Gv
+		# /Gv
 	)
 endif()
 
