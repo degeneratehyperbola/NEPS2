@@ -8,7 +8,7 @@
 #define FIND_IMPORTANT(variableName, moduleName, pattern, offset) \
 	uintptr_t variableName = MemorySearch::FindPattern(moduleName, pattern) + offset; \
 	if (!variableName) \
-		return NEPS::Error("Attachment error", "Pattern or module not found. Could not find\n%s.dll | %s.", moduleName, #variableName); \
+		return NEPS::Error("Attachment error", "Pattern or module not found.\nCould not find %s.dll or %s.", moduleName, #variableName); \
 
 // Same as above but we are searching for a relative pointer
 #define FIND_IMPORTANT_RELATIVE(variableName, moduleName, pattern, offsetFromInitialResult) \
@@ -28,7 +28,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 		g_hWnd = FindWindowA("SDL_app", nullptr);
 
 		if (!g_hWnd)
-			return NEPS::Error("Attachment error", "Could not find game window. Expected class name '%s'.", "SDL_app");
+			return NEPS::Error("Attachment error", "Could not find game window.");
 
 		g_bIsUsingVulkan = GetModuleHandleA("rendersystemvulkan");
 
@@ -37,14 +37,14 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 
 		// Setup ImGui
 		if (!ImGui::CreateContext())
-			return NEPS::Error("Initialization error", "Could not create ImGui context. " STRINGIFY(ImGui::CreateContext));
+			return NEPS::Error("Initialization error", "Could not create ImGui context.");
 
 		if (!ImGui_ImplWin32_Init(g_hWnd))
-			return NEPS::Error("Initialization error", "Could not initialize ImGui windows implementation. " STRINGIFY(ImGui_ImplWin32_Init));
+			return NEPS::Error("Initialization error", "Could not initialize ImGui windows implementation.");
 
 		// Setup our hooking method, MinHook in our case
 		if (!HookManager::Setup())
-			return NEPS::Error("Initialization error", "Could not setup hook manager. " STRINGIFY(HookManager::Setup));
+			return NEPS::Error("Initialization error", "Could not setup hook manager.");
 
 		// Hook interesting functions
 		g_pOriginalWndProc = (WNDPROC)SetWindowLongPtrW(g_hWnd, GWLP_WNDPROC, (LONG_PTR)Callbacks::WndProc);
@@ -54,17 +54,17 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 			switch (GetLastError())
 			{
 			case ERROR_INVALID_HANDLE:
-				return NEPS::Error("Attachment error", "Could not hook WndProc. Invalid window handle. " STRINGIFY(SetWindowLongPtrW));
+				return NEPS::Error("Attachment error", "Could not hook WndProc. Invalid window handle.");
 			case ERROR_ACCESS_DENIED:
-				return NEPS::Error("Attachment error", "Could not hook WndProc. Access denied. " STRINGIFY(SetWindowLongPtrW));
+				return NEPS::Error("Attachment error", "Could not hook WndProc. Access denied.");
 			default:
-				return NEPS::Error("Attachment error", "Could not hook WndProc. Unhandled error occured. " STRINGIFY(SetWindowLongPtrW));
+				return NEPS::Error("Attachment error", "Could not hook WndProc. Unhandled error occured.");
 			}
 		}
 
 		if (g_bIsUsingVulkan)
 			// TODO Vulkan support
-			return NEPS::Error("Attachment error", "Vulkan is not yet supported. " STRINGIFY(g_bIsUsingVulkan) " is true");
+			return NEPS::Error("Attachment error", "Vulkan is not yet supported.");
 		else
 		{
 			FIND_IMPORTANT(fnPresent, "gameoverlayrenderer64", "48 89 6C 24 18 48 89 74 24 20 41 56 48 83 EC 20 41 8B E8", 0);
@@ -90,7 +90,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 
 		// Setup scripting environment
 		if (!ScriptManager::Setup())
-			return NEPS::Error("Initialization error", "Failed to initialize Python context. " STRINGIFY(ScriptManager::Setup));
+			return NEPS::Error("Initialization error", "Could not initialize Python context.");
 
 		break;
 	}
