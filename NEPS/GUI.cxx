@@ -8,9 +8,11 @@
 
 static bool s_isDemoWindowOpen = true;
 static bool s_isDebugWindowOpen = true;
+static bool s_ScriptsWindowOpen = false;
 
 void RenderDebugWindow();
 void RenderContextMenu();
+void RenderScriptsWindow();
 
 
 void GUI::Render()
@@ -60,6 +62,7 @@ void GUI::Render()
 	#ifdef _DEBUG
 	if (s_isDemoWindowOpen) ImGui::ShowDemoWindow(&s_isDemoWindowOpen);
 	RenderDebugWindow();
+	RenderScriptsWindow();
 	#endif
 }
 
@@ -139,4 +142,20 @@ void RenderDebugWindow()
 			ImGui::TreePop();
 		}
 	}
+}
+
+void RenderScriptsWindow()
+{
+	if (!s_ScriptsWindowOpen) return;
+
+	if (ImGui::Begin("Scripts"))
+	{
+		if (ImGui::Button("Scan directory"))
+			ScriptManager::ScanDirectory();
+		
+		for (const auto &scr : ScriptManager::TrackedScripts)
+			ImGui::TextUnformatted(scr.Path.string().c_str());
+	}
+
+	ImGui::End();
 }
