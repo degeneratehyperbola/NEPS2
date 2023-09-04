@@ -6,8 +6,8 @@
 #include "General.hxx"
 
 
-static bool s_isDemoWindowOpen = true;
-static bool s_isDebugWindowOpen = true;
+static bool s_DemoWindowOpen = false;
+static bool s_DebugWindowOpen = false;
 static bool s_ScriptsWindowOpen = false;
 
 void RenderDebugWindow();
@@ -17,7 +17,7 @@ void RenderScriptsWindow();
 
 void GUI::Render()
 {
-	if (!isOpen) return;
+	if (!IsOpen) return;
 
 	// Context menu logic
 	if (!ImGui::GetIO().WantCaptureMouse && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
@@ -51,8 +51,9 @@ void GUI::Render()
 
 		// Menu bar items
 		#ifdef _DEBUG
-		ImGui::MenuItem("Demo Window", nullptr, &s_isDemoWindowOpen);
-		ImGui::MenuItem("Debug Window", nullptr, &s_isDebugWindowOpen);
+		ImGui::MenuItem("Demo Window", nullptr, &s_DemoWindowOpen);
+		ImGui::MenuItem("Debug Window", nullptr, &s_DebugWindowOpen);
+		ImGui::MenuItem("Scripts", nullptr, &s_ScriptsWindowOpen);
 		#endif
 		
 		ImGui::EndMainMenuBar();
@@ -60,7 +61,7 @@ void GUI::Render()
 
 	// Render opened windows
 	#ifdef _DEBUG
-	if (s_isDemoWindowOpen) ImGui::ShowDemoWindow(&s_isDemoWindowOpen);
+	if (s_DemoWindowOpen) ImGui::ShowDemoWindow(&s_DemoWindowOpen);
 	RenderDebugWindow();
 	RenderScriptsWindow();
 	#endif
@@ -74,7 +75,7 @@ void RenderContextMenu()
 
 void RenderDebugWindow()
 {
-	if (!s_isDebugWindowOpen) return;
+	if (!s_DebugWindowOpen) return;
 
 	if (ImGui::CollapsingHeader("Game interface tests"))
 	{

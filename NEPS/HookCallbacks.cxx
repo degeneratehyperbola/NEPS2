@@ -105,10 +105,10 @@ LRESULT WINAPI Callbacks::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 			// Menu toggle buttons
 			else if (wParam == VK_INSERT || wParam == VK_DELETE)
 			{
-				GUI::isOpen = !GUI::isOpen;
+				GUI::IsOpen = !GUI::IsOpen;
 
 				// Place cursor in the center for convenience
-				if (GUI::isOpen && CS2::InputSystem->WantToCaptureMouse())
+				if (GUI::IsOpen && CS2::InputSystem->WantToCaptureMouse())
 				{
 					int w, h;
 					CS2::EngineClient->GetScreenSize(w, h);
@@ -121,7 +121,7 @@ LRESULT WINAPI Callbacks::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 			NEPS::InputEvent::KeyUp(wParam);
 
 		// Unlock cursor whenever we need it, otherwise restore polling
-		if (GUI::isOpen)
+		if (GUI::IsOpen)
 		{
 			CS2::SetRelativeMouseMode(false);
 			CS2::SetMouseCapture(false);
@@ -137,7 +137,7 @@ LRESULT WINAPI Callbacks::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 			break;
 
 		// Skip game's input handling and cursor changing if GUI is open
-		if (GUI::isOpen) return ERROR_SUCCESS;
+		if (GUI::IsOpen) return ERROR_SUCCESS;
 
 		break;
 	}
