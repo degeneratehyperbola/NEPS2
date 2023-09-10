@@ -4,6 +4,8 @@
 
 // Standard framework
 #include <list>
+#include <vector>
+#include <array>
 #include <filesystem>
 
 namespace fs = std::filesystem;

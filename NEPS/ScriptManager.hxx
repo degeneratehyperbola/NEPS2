@@ -42,5 +42,5 @@ namespace ScriptManager
 	void Unload(Script& script);
 
 
-	inline std::list<Script> TrackedScripts;
+	inline std::vector<Script> TrackedScripts;
 }
