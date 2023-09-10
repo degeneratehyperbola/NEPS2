@@ -10,62 +10,6 @@ static bool s_DemoWindowOpen = false;
 static bool s_DebugWindowOpen = false;
 static bool s_ScriptManagerWindowOpen = false;
 
-void RenderDebugWindow();
-void RenderContextMenu();
-void RenderScriptsWindow();
-
-
-void GUI::Render()
-{
-	if (!IsOpen) return;
-
-	// Context menu logic
-	if (!ImGui::GetIO().WantCaptureMouse && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
-		ImGui::OpenPopup("##ContextMenu");
-
-	if (ImGui::BeginPopup("##ContextMenu"))
-	{
-		RenderContextMenu();
-		ImGui::EndPopup();
-	}
-
-	// Render the main menu bar
-	if (ImGui::BeginMainMenuBar())
-	{
-		// Logo
-		if (ImGui::BeginMenu("NEPS2"))
-		{
-			RenderContextMenu();
-			ImGui::EndMenu();
-		}
-
-		ImGui::Separator();
-
-		#ifdef _DEBUG
-		ImGui::TextDisabled("%s Debug Build", __DATE__);
-		#else
-		ImGui::TextDisabled("%s Build", __DATE__);
-		#endif
-
-		ImGui::Separator();
-
-		// Menu bar items
-		#ifdef _DEBUG
-		ImGui::MenuItem("Demo Window", nullptr, &s_DemoWindowOpen);
-		ImGui::MenuItem("Debug Window", nullptr, &s_DebugWindowOpen);
-		ImGui::MenuItem("Scripts", nullptr, &s_ScriptsWindowOpen);
-		#endif
-		
-		ImGui::EndMainMenuBar();
-	}
-
-	// Render opened windows
-	#ifdef _DEBUG
-	if (s_DemoWindowOpen) ImGui::ShowDemoWindow(&s_DemoWindowOpen);
-	RenderDebugWindow();
-	RenderScriptsWindow();
-	#endif
-}
 
 void RenderContextMenu()
 {
@@ -145,7 +89,7 @@ void RenderDebugWindow()
 	}
 }
 
-void RenderScriptsWindow()
+void RenderScriptManagerWindow()
 {
 	if (!s_ScriptManagerWindowOpen) return;
 
@@ -183,4 +127,57 @@ void RenderScriptsWindow()
 	}
 
 	ImGui::End();
+}
+
+
+void GUI::Render()
+{
+	if (!IsOpen) return;
+
+	// Context menu logic
+	if (!ImGui::GetIO().WantCaptureMouse && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+		ImGui::OpenPopup("##ContextMenu");
+
+	if (ImGui::BeginPopup("##ContextMenu"))
+	{
+		RenderContextMenu();
+		ImGui::EndPopup();
+	}
+
+	// Render the main menu bar
+	if (ImGui::BeginMainMenuBar())
+	{
+		// Logo
+		if (ImGui::BeginMenu("NEPS2"))
+		{
+			RenderContextMenu();
+			ImGui::EndMenu();
+		}
+
+		ImGui::Separator();
+
+		#ifdef _DEBUG
+		ImGui::TextDisabled("%s Debug Build", __DATE__);
+		#else
+		ImGui::TextDisabled("%s Build", __DATE__);
+		#endif
+
+		ImGui::Separator();
+
+		// Menu bar items
+		#ifdef _DEBUG
+		ImGui::MenuItem("Demo", nullptr, &s_DemoWindowOpen);
+		ImGui::MenuItem("Debug", nullptr, &s_DebugWindowOpen);
+		ImGui::MenuItem("Scripts", nullptr, &s_ScriptManagerWindowOpen);
+		#endif
+		
+		ImGui::EndMainMenuBar();
+	}
+
+	// Render opened windows
+	#ifdef _DEBUG
+	if (s_DemoWindowOpen) ImGui::ShowDemoWindow(&s_DemoWindowOpen);
+	RenderDebugWindow();
+	RenderScriptManagerWindow();
+	#endif
 }
