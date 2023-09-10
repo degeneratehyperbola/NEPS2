@@ -20,6 +20,8 @@ void ScriptManager::Cleanup()
 
 void ScriptManager::ScanDirectory()
 {
+	TrackedScripts.clear();
+
 	for (const auto& entry : fs::directory_iterator(g_dirScripts))
 	{
 		if (fs::is_regular_file(entry) && entry.path().extension() == ".py")
@@ -36,4 +38,5 @@ void ScriptManager::LoadScript(Script& script)
 void ScriptManager::Unload(Script& script)
 {
 	script.Scope = py::dict();
+	script.Loaded = false;
 }
