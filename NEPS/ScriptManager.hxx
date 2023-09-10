@@ -11,8 +11,27 @@ namespace ScriptManager
 	struct Script
 	{
 		fs::path Path;
-		py::dict Scope{ };
+		py::dict Scope;
 		bool Loaded = false;
+	};
+
+
+	class GIL
+	{
+	public:
+		GIL()
+		{
+			m_State = PyGILState_Ensure();
+		}
+
+		~GIL()
+		{
+			PyGILState_Release(m_State);
+		}
+
+
+	private:
+		PyGILState_STATE m_State;
 	};
 
 
