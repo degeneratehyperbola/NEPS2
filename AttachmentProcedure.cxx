@@ -80,7 +80,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 		// Now that everything in the back-end is setup we ensure our environment
 		g_dirProfile = getenv("USERPROFILE");
 		g_dirProfile /= "Documents";
-		g_dirProfile /= "NEPS";
+		g_dirProfile /= "NEPS2";
 
 		g_dirConfigs = g_dirProfile / "configs";
 		g_dirScripts = g_dirProfile / "scripts";
