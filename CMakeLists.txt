@@ -46,6 +46,7 @@ add_library(NEPS2_DLL SHARED ${SOURCE_FILES})
 target_compile_definitions(NEPS2_DLL PRIVATE
 	$<$<CONFIG:Debug>:_DEBUG>
 	$<$<CONFIG:Release>:NDEBUG>
+	NOMINMAX
 )
 
 # Set compiler options
