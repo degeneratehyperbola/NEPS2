@@ -8,7 +8,7 @@
 
 static bool s_DemoWindowOpen = false;
 static bool s_DebugWindowOpen = false;
-static bool s_ScriptsWindowOpen = false;
+static bool s_ScriptManagerWindowOpen = false;
 
 void RenderDebugWindow();
 void RenderContextMenu();
@@ -147,15 +147,39 @@ void RenderDebugWindow()
 
 void RenderScriptsWindow()
 {
-	if (!s_ScriptsWindowOpen) return;
+	if (!s_ScriptManagerWindowOpen) return;
 
-	if (ImGui::Begin("Scripts"))
+	if (ImGui::Begin("Script Manager"))
 	{
+		namespace SM = ScriptManager;
+		static size_t selectedScript = 0;
+
+		selectedScript = std::min(selectedScript, SM::TrackedScripts.size());
+
 		if (ImGui::Button("Scan directory"))
-			ScriptManager::ScanDirectory();
-		
-		for (const auto &scr : ScriptManager::TrackedScripts)
-			ImGui::TextUnformatted(scr.Path.string().c_str());
+		{
+			SM::GIL lock;
+			SM::ScanDirectory();
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Load"))
+		{
+			SM::GIL lock;
+			SM::LoadScript(SM::TrackedScripts[selectedScript]);
+		}
+
+		if (ImGui::BeginListBox("##ScriptList", ImVec2(200 * GUI::GuiScale, 300 * GUI::GuiScale)))
+		{
+			for (size_t i = 0; i < SM::TrackedScripts.size(); i++)
+			{
+				if (ImGui::Selectable(SM::TrackedScripts[i].Path.filename().string().c_str(), i == selectedScript))
+					selectedScript = i;
+			}
+
+			ImGui::EndListBox();
+		}
 	}
 
 	ImGui::End();
