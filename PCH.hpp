@@ -25,14 +25,14 @@ namespace fs = std::filesystem;
 // MinHook
 #include <minhook/MinHook.h>
 
+// Python
+#include <Python.h>
+
 // Pybind11
 #include <pybind11/pybind11.h>
 #include <pybind11/embed.h>
 
 namespace py = pybind11;
-
-// Python
-#include <Python.h>
 
 // Custom tools
 #include <MemoryTools.hxx>

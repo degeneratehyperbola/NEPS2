@@ -36,5 +36,5 @@ int NEPS::Error(const char* msgBoxTitle, const char* msgBoxContentFmt, ...)
 	MessageBoxA(nullptr, content, title, MB_ICONERROR | MB_OK);
 	Unload();
 
-	return 0; // It returns FALSE just for syntactic sugar
+	return 0; // It returns FALSE so we can just return the result of this function in a fatal error situation. Just for syntactic sugar <3
 }
