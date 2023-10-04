@@ -55,8 +55,8 @@ LRESULT WINAPI Callbacks::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 {
 	ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 
-	// SDL2 unimplementation TwT
-	// SDL2 begone!! Unimplement!!1!
+	// SDL3 unimplementation TwT
+	// SDL3 begone!! Unimplement!!1!
 	// We capture some messages :3
 	switch (uMsg)
 	{
