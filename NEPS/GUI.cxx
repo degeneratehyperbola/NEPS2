@@ -168,8 +168,8 @@ void GUI::Render()
 		#ifdef _DEBUG
 		ImGui::MenuItem("Demo", nullptr, &s_DemoWindowOpen);
 		ImGui::MenuItem("Debug", nullptr, &s_DebugWindowOpen);
-		ImGui::MenuItem("Scripts", nullptr, &s_ScriptManagerWindowOpen);
 		#endif
+		ImGui::MenuItem("Scripts", nullptr, &s_ScriptManagerWindowOpen);
 		
 		ImGui::EndMainMenuBar();
 	}
