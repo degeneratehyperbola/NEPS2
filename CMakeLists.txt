@@ -3,7 +3,7 @@ project(NEPS2)
 
 # Required packages
 find_package(Vulkan REQUIRED)
-find_package(Python 3.10 REQUIRED COMPONENTS Interpreter Development)
+find_package(Python 3.11 REQUIRED COMPONENTS Interpreter Development)
 
 # Enforce MSVC
 if (NOT MSVC)
