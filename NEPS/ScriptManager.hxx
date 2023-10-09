@@ -13,22 +13,23 @@ namespace ScriptManager
 		fs::path Path;
 		std::unique_ptr<py::dict> Scope = nullptr;
 		bool Loaded = false;
+
+		void Load();
+		void Unload();
 	};
 
-
-	class GIL
+	class AcquireGIL
 	{
 	public:
-		GIL()
+		AcquireGIL()
 		{
 			m_State = PyGILState_Ensure();
 		}
 
-		~GIL()
+		~AcquireGIL()
 		{
 			PyGILState_Release(m_State);
 		}
-
 
 	private:
 		PyGILState_STATE m_State;
@@ -38,10 +39,7 @@ namespace ScriptManager
 	bool Setup();
 	void Cleanup();
 	void ScanDirectory();
-	void LoadScript(Script& script);
-	void Unload(Script& script);
 
 
 	inline std::vector<Script> TrackedScripts;
-	inline bool Initialized = false;
 }

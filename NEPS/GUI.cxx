@@ -101,17 +101,14 @@ void RenderScriptManagerWindow()
 		selectedScript = std::min(selectedScript, SM::TrackedScripts.size());
 
 		if (ImGui::Button("Scan directory"))
-		{
-			SM::GIL lock;
 			SM::ScanDirectory();
-		}
 
 		ImGui::SameLine();
 
 		if (ImGui::Button("Load"))
 		{
-			SM::GIL lock;
-			SM::LoadScript(SM::TrackedScripts[selectedScript]);
+			SM::AcquireGIL _;
+			SM::TrackedScripts[selectedScript].Load();
 		}
 
 		if (ImGui::BeginListBox("##ScriptList", ImVec2(200 * GUI::GuiScale, 300 * GUI::GuiScale)))

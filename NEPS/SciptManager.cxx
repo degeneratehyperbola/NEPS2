@@ -3,21 +3,29 @@
 #include "Globals.hxx"
 
 
+static bool s_bInitialized = false; // Keep track of interpreter initialization
+static PyThreadState* s_ThreadState = nullptr; // The GIL TwT
+
 bool ScriptManager::Setup()
 {
 	try { py::initialize_interpreter(); }
 	catch (std::exception& e) { return false; }
+	s_ThreadState = PyEval_SaveThread(); // Py_BEGIN_ALLOW_THREADS
+	s_bInitialized = true;
 
 	ScanDirectory();
 
-	Initialized = true;
 	return true;
 }
 
 void ScriptManager::Cleanup()
 {
-	if (Initialized)
+	if (s_bInitialized)
+	{
+		PyEval_RestoreThread(s_ThreadState); // Py_END_ALLOW_THREADS
 		py::finalize_interpreter();
+		s_bInitialized = false;
+	}
 }
 
 void ScriptManager::ScanDirectory()
@@ -31,15 +39,15 @@ void ScriptManager::ScanDirectory()
 	}
 }
 
-void ScriptManager::LoadScript(Script& script)
+void ScriptManager::Script::Load()
 {
-	script.Scope = std::make_unique<py::dict>();
-	py::eval_file(script.Path.string().c_str(), *script.Scope);
-	script.Loaded = true;
+	this->Scope = std::make_unique<py::dict>();
+	py::eval_file(this->Path.string().c_str(), *this->Scope);
+	this->Loaded = true;
 }
 
-void ScriptManager::Unload(Script& script)
+void ScriptManager::Script::Unload()
 {
-	script.Scope.reset();
-	script.Loaded = false;
+	this->Scope.reset();
+	this->Loaded = false;
 }
