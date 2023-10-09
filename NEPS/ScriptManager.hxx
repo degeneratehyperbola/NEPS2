@@ -11,7 +11,7 @@ namespace ScriptManager
 	struct Script
 	{
 		fs::path Path;
-		py::dict Scope;
+		std::unique_ptr<py::dict> Scope = nullptr;
 		bool Loaded = false;
 	};
 
@@ -43,4 +43,5 @@ namespace ScriptManager
 
 
 	inline std::vector<Script> TrackedScripts;
+	inline bool Initialized = false;
 }

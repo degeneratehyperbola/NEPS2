@@ -11,5 +11,5 @@
 namespace NEPS
 {
 	void Unload();
-	int Error(const char* title, const char* contentFmt, ...);
+	bool FatalError(const char* title, const char* contentFmt, ...);
 }

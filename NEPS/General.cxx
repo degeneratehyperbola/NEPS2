@@ -1,7 +1,5 @@
 #include "General.hxx"
 
-#include <PCH.hpp>
-
 #include "CS2/General.hxx"
 
 #include "Globals.hxx"
@@ -22,7 +20,7 @@ void NEPS::Unload()
 }
 
 // Show a message box and unload
-int NEPS::Error(const char* msgBoxTitle, const char* msgBoxContentFmt, ...)
+bool NEPS::FatalError(const char* msgBoxTitle, const char* msgBoxContentFmt, ...)
 {
 	char content[1024];
 	va_list args;
@@ -31,10 +29,10 @@ int NEPS::Error(const char* msgBoxTitle, const char* msgBoxContentFmt, ...)
 	va_end(args);
 
 	char title[256];
-	sprintf_s(title, "NEPS2 | %s", msgBoxTitle);
+	sprintf_s(title, "NEPS2 Fatal Error | %s", msgBoxTitle);
 
 	MessageBoxA(nullptr, content, title, MB_ICONERROR | MB_OK);
 	Unload();
 
-	return 0; // It returns FALSE so we can just return the result of this function in a fatal error situation. Just for syntactic sugar <3
+	return false; // It returns false so we can just return the result of this function in a fatal error situation. Just for syntactic sugar <3
 }

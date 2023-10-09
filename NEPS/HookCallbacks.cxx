@@ -12,6 +12,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM,
 // DirectX11 | Called each render frame
 HRESULT WINAPI Callbacks::Present(IDXGISwapChain* pSwapChain, UINT syncInterval, UINT flags)
 {
+	// WndProc hoking nd some ImGui setup needs to be done in the game's thread
 	if (!g_bImGuiInitialized)
 	{
 		ID3D11Device* pD3DDevice = nullptr;
@@ -19,14 +20,27 @@ HRESULT WINAPI Callbacks::Present(IDXGISwapChain* pSwapChain, UINT syncInterval,
 		pSwapChain->GetDevice(__uuidof(ID3D11Device), (void**)&pD3DDevice);
 		pD3DDevice->GetImmediateContext(&pDeviceContext);
 
-		ImGui_ImplDX11_Init(pD3DDevice, pDeviceContext);
+		if (!ImGui_ImplDX11_Init(pD3DDevice, pDeviceContext))
+			return NEPS::FatalError("Initialization", "Could not initialize ImGui DX11 frontend");
 
-		auto& io = ImGui::GetIO();
 		// We do not want to create any files inside the game folder (OwO') !!!
+		auto& io = ImGui::GetIO();
 		io.IniFilename = nullptr;
 		io.LogFilename = nullptr;
 
 		g_bImGuiInitialized = true;
+	}
+
+	if (!g_pOriginalWndProc)
+	{
+		DXGI_SWAP_CHAIN_DESC desc;
+		pSwapChain->GetDesc(&desc);
+		g_hWnd = desc.OutputWindow;
+
+		if (!ImGui_ImplWin32_Init(g_hWnd))
+			return NEPS::FatalError("Initialization", "Could not initialize ImGui backend");
+
+		g_pOriginalWndProc = (WNDPROC)SetWindowLongPtrW(g_hWnd, GWLP_WNDPROC, (LONG_PTR)Callbacks::WndProc);
 	}
 
 	ImGui_ImplDX11_NewFrame();
@@ -98,7 +112,7 @@ LRESULT WINAPI Callbacks::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 		// Our input handling
 		if (uMsg == WM_KEYDOWN && !(lParam & (1 << 30)))
 		{
-			NEPS::InputEvent::KeyDown(wParam);
+			InputEvent::KeyDown(wParam);
 
 			if (wParam == VK_END)
 				NEPS::Unload();
@@ -118,7 +132,7 @@ LRESULT WINAPI Callbacks::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 		}
 
 		if (uMsg == WM_KEYUP)
-			NEPS::InputEvent::KeyUp(wParam);
+			InputEvent::KeyUp(wParam);
 
 		// Unlock cursor whenever we need it, otherwise restore polling
 		if (GUI::IsOpen)

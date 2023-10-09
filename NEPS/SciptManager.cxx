@@ -6,16 +6,18 @@
 bool ScriptManager::Setup()
 {
 	try { py::initialize_interpreter(); }
-	catch (const std::exception& e) { return false; }
+	catch (std::exception& e) { return false; }
 
 	ScanDirectory();
 
+	Initialized = true;
 	return true;
 }
 
 void ScriptManager::Cleanup()
 {
-	py::finalize_interpreter();
+	if (Initialized)
+		py::finalize_interpreter();
 }
 
 void ScriptManager::ScanDirectory()
@@ -31,12 +33,13 @@ void ScriptManager::ScanDirectory()
 
 void ScriptManager::LoadScript(Script& script)
 {
-	py::eval_file(script.Path.string().c_str(), script.Scope);
+	script.Scope = std::make_unique<py::dict>();
+	py::eval_file(script.Path.string().c_str(), *script.Scope);
 	script.Loaded = true;
 }
 
 void ScriptManager::Unload(Script& script)
 {
-	script.Scope = py::dict();
+	script.Scope.reset();
 	script.Loaded = false;
 }

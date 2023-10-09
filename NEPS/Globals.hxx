@@ -12,6 +12,6 @@ inline fs::path g_dirScripts; // General globals | Script directory path
 inline bool g_bIsUsingVulkan; // Rendering related globals
 inline bool g_bImGuiInitialized; // Rendering related globals | Is ImGui backend initialized
 
-inline WNDPROC g_pOriginalWndProc; // Hooking related globals | Callbacks::WndProc
+inline WNDPROC g_pOriginalWndProc = nullptr; // Hooking related globals | Callbacks::WndProc
 inline HookManager g_hkPresent; // Hooking related globals | Callbacks::Present
 inline HookManager g_hkResizeBuffers; // Hooking related globals | Callbacks::ResizeBuffers
