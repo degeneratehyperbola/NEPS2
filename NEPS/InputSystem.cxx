@@ -5,12 +5,12 @@
 #include "General.hxx"
 
 
-void NEPS::InputEvent::KeyDown(int vKey)
+void InputEvent::KeyDown(int vKey)
 {
 	
 }
 
-void NEPS::InputEvent::KeyUp(int vKey)
+void InputEvent::KeyUp(int vKey)
 {
 	
 }
