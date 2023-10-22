@@ -6,6 +6,7 @@
 static bool s_bInitialized = false; // Keep track of interpreter initialization
 static PyThreadState* s_ThreadState = nullptr; // The GIL TwT
 
+
 bool ScriptManager::Setup()
 {
 	try { py::initialize_interpreter(); }
@@ -27,6 +28,7 @@ void ScriptManager::Cleanup()
 		s_bInitialized = false;
 	}
 }
+
 
 void ScriptManager::ScanDirectory()
 {
