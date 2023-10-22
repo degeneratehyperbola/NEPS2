@@ -38,16 +38,15 @@ void RenderDebugWindow()
 		if (ImGui::TreeNode("Engine Client [" STRINGIFY(CS2::IEngineClient) "]"))
 		{
 			bool dummy[] = {
-				CS2::EngineClient->IsConnected(),
 				CS2::EngineClient->IsInGame()
 			};
 			ImGui::BeginDisabled();
-			ImGui::Checkbox("Is connected", dummy);
-			ImGui::Checkbox("Is in game", dummy + 1);
+			ImGui::Checkbox("Is in game", dummy);
 			ImGui::EndDisabled();
 
-			ImGui::Text("Level name: %s", CS2::EngineClient->GetLevelName());
-			ImGui::Text("Level name short: %s", CS2::EngineClient->GetLevelNameShort());
+			int w, h;
+			CS2::EngineClient->GetScreenSize(w, h);
+			ImGui::Text("Screen size (WxH): %dx%d", w, h);
 
 			ImGui::TreePop();
 		}
