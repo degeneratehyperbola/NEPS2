@@ -41,6 +41,8 @@ void ScriptManager::ScanDirectory()
 
 void ScriptManager::Script::Load()
 {
+	if (!fs::exists(g_dirScripts / this->Path)) return;
+
 	this->Scope = std::make_unique<py::dict>();
 	py::eval_file(this->Path.string().c_str(), *this->Scope);
 	this->Loaded = true;
