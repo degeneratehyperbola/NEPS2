@@ -19,6 +19,12 @@ void CS2::WarpMouseInWindow(int x, int y)
 	if (fn) fn(InputSystem->GetSDLWindow(), x, y);
 }
 
+void CS2::GetWindowSize(int* w, int* h)
+{
+	static auto fn = EXTERNAL_PROC("SDL3", "SDL_GetWindowSize", int, (void*, int*, int*));
+	if (fn) fn(InputSystem->GetSDLWindow(), w, h);
+}
+
 template<typename T>
 T* FindInterface(const char* moduleName, const char* versionString)
 {

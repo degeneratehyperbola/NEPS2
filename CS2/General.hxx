@@ -13,6 +13,7 @@ namespace CS2
 	void SetRelativeMouseMode(bool enabled);
 	void SetMouseCapture(bool enabled);
 	void WarpMouseInWindow(int x, int y);
+	void GetWindowSize(int* w, int* h);
 
 	inline IInputSystem* InputSystem;
 	inline IEngineClient* EngineClient;

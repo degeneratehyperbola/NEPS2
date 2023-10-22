@@ -45,7 +45,7 @@ void RenderDebugWindow()
 			ImGui::EndDisabled();
 
 			int w, h;
-			CS2::EngineClient->GetScreenSize(w, h);
+			CS2::GetWindowSize(&w, &h);
 			ImGui::Text("Screen size (WxH): %dx%d", w, h);
 
 			ImGui::TreePop();

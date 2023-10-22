@@ -125,7 +125,7 @@ LRESULT WINAPI Callbacks::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 				if (GUI::IsOpen && CS2::InputSystem->WantToCaptureMouse())
 				{
 					int w, h;
-					CS2::EngineClient->GetScreenSize(w, h);
+					CS2::GetWindowSize(&w, &h);
 					CS2::WarpMouseInWindow(w / 2, h / 2);
 				}
 			}
