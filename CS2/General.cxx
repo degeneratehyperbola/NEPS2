@@ -32,5 +32,4 @@ void CS2::SetupInterfaces()
 {
 	InputSystem = FindInterface<IInputSystem>("inputsystem", "InputSystemVersion001");
 	EngineClient = FindInterface<IEngineClient>("engine2", "Source2EngineToClient001");
-	ConVarIndex = FindInterface<IConVarIndex>("tier0", "VEngineCvar007");
 }

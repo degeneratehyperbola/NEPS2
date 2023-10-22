@@ -50,41 +50,6 @@ void RenderDebugWindow()
 
 			ImGui::TreePop();
 		}
-
-		if (ImGui::TreeNode("Console Variable Index [" STRINGIFY(CS2::IConVarIndex) "]"))
-		{
-			static CS2::ConVar* var;
-			static size_t idx;
-
-			if (ImGui::InputInt("Variable index", (int*)&idx))
-				var = CS2::ConVarIndex->GetVar(idx);
-
-			ImGui::SeparatorText("Info");
-			if (var)
-			{
-				ImGui::Text("Name: %s", var->Name());
-
-				if (ImGui::BeginTabBar("##VarValues"))
-				{
-					if (ImGui::BeginTabItem("Integer"))
-					{
-						ImGui::Text("%i", var->GetInt());
-						ImGui::EndTabItem();
-					}
-
-					if (ImGui::BeginTabItem("Float"))
-					{
-						ImGui::Text("%f", var->GetFloat());
-						ImGui::EndTabItem();
-					}
-
-					ImGui::EndTabBar();
-				}
-			}
-			else ImGui::TextDisabled("nullptr");
-
-			ImGui::TreePop();
-		}
 	}
 }
 

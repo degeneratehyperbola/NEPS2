@@ -4,7 +4,6 @@
 
 #include "SDK/interfaces/InputSystem.hxx"
 #include "SDK/interfaces/EngineClient.hxx"
-#include "SDK/interfaces/ConVar.hxx"
 
 
 namespace CS2
@@ -17,5 +16,4 @@ namespace CS2
 
 	inline IInputSystem* InputSystem;
 	inline IEngineClient* EngineClient;
-	inline IConVarIndex* ConVarIndex;
 }
