@@ -30,7 +30,7 @@ The legend returns
 
 ## Pssst, you wanna contribute? :3
 
-- Pls follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification `^w^`
+- Pls follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification `^w^` (I know, I didn't follow it at first but i realized that it helps generate changelogs)
 - No specific rules for pull request title and description `>w<`
 - A pull request should not exceed the scope of the feature/fix implemented `•//w//•`
 	- Don't introduce too much uneeded changes scattered across the repo!!
