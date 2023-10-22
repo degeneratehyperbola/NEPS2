@@ -7,17 +7,6 @@
 // Currently used interpreter: Python3
 namespace ScriptManager
 {
-	// Script structure tracks a single script, like its path and global scope
-	struct Script
-	{
-		fs::path Path;
-		std::unique_ptr<py::dict> Scope = nullptr;
-		bool Loaded = false;
-
-		void Load();
-		void Unload();
-	};
-
 	class AcquireGIL
 	{
 	public:
@@ -33,6 +22,17 @@ namespace ScriptManager
 
 	private:
 		PyGILState_STATE m_State;
+	};
+
+	// Script structure tracks a single script, like its path and global scope
+	struct Script
+	{
+		fs::path Path;
+		std::unique_ptr<py::dict> Scope = nullptr;
+		bool Loaded = false;
+
+		void Load();
+		void Unload();
 	};
 
 
