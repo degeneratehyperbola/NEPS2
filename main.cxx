@@ -1,7 +1,7 @@
-#include <PCH.hpp>
+#include <pch.hpp>
 
-#include "NEPS/General.hxx"
-#include "CS2/General.hxx"
+#include "neps/general.hxx"
+#include "cs2/general.hxx"
 
 
 // Scan for an essential memory address, otherwise self-destruct

@@ -1,4 +1,4 @@
-#include "MemoryTools.hxx"
+#include "memory_tools.hxx"
 
 #include <Windows.h>
 #include <Psapi.h>

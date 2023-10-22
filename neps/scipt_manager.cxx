@@ -1,6 +1,6 @@
-#include "ScriptManager.hxx"
+#include "script_manager.hxx"
 
-#include "Globals.hxx"
+#include "globals.hxx"
 
 
 static bool s_bInitialized = false; // Keep track of interpreter initialization

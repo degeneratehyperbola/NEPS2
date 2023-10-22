@@ -1,6 +1,6 @@
 #pragma once
 
-#include <PCH.hpp>
+#include <pch.hpp>
 
 
 // ScriptManager is used to load and track scripts as well as providing them with an individual context

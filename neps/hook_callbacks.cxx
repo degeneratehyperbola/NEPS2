@@ -1,9 +1,9 @@
-#include "HookCallbacks.hxx"
+#include "hook_callbacks.hxx"
 
-#include <PCH.hpp>
+#include <pch.hpp>
 
-#include "CS2/General.hxx"
-#include "General.hxx"
+#include "cs2/general.hxx"
+#include "general.hxx"
 
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);

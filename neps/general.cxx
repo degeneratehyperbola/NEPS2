@@ -1,9 +1,9 @@
-#include "General.hxx"
+#include "general.hxx"
 
-#include "CS2/General.hxx"
+#include "cs2/general.hxx"
 
-#include "Globals.hxx"
-#include "GUI.hxx"
+#include "globals.hxx"
+#include "gui.hxx"
 
 
 // Self-destruction from a different thread :3

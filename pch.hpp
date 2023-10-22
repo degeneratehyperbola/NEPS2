@@ -26,5 +26,5 @@ namespace fs = std::filesystem;
 #include <minhook/MinHook.h>
 
 // Custom tools
-#include <MemoryTools.hxx>
-#include <HookManager.hxx>
+#include <memory_tools.hxx>
+#include <hook_manager.hxx>

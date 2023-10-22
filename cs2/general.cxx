@@ -1,4 +1,4 @@
-#include "General.hxx"
+#include "general.hxx"
 
 
 // Enables or disables relative mouse mode, where the mouse stays in one place but sends move events

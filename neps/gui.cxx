@@ -1,9 +1,9 @@
-#include "GUI.hxx"
+#include "gui.hxx"
 
-#include <PCH.hpp>
+#include <pch.hpp>
 
-#include "CS2/General.hxx"
-#include "General.hxx"
+#include "cs2/general.hxx"
+#include "general.hxx"
 
 
 static bool s_DemoWindowOpen = false;

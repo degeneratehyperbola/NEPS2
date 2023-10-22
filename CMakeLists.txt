@@ -10,7 +10,7 @@ if (NOT MSVC)
 endif()
 
 # Set the precompiled header file
-set(PCH_FILE "PCH.hpp")
+set(PCH_FILE "pch.hpp")
 
 # Add root directory and used include directories as include search paths
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -31,8 +31,8 @@ file(GLOB_RECURSE SOURCE_FILES2
 	${CMAKE_CURRENT_SOURCE_DIR}/include/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/include/*.c
 	
-	${CMAKE_CURRENT_SOURCE_DIR}/CS2/*.cxx
-	${CMAKE_CURRENT_SOURCE_DIR}/NEPS/*.cxx
+	${CMAKE_CURRENT_SOURCE_DIR}/cs2/*.cxx
+	${CMAKE_CURRENT_SOURCE_DIR}/neps/*.cxx
 )
 
 list(APPEND SOURCE_FILES ${SOURCE_FILES2})

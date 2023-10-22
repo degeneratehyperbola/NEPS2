@@ -1,8 +1,8 @@
-#include "InputSystem.hxx"
+#include "input_system.hxx"
 
-#include <PCH.hpp>
+#include <pch.hpp>
 
-#include "General.hxx"
+#include "general.hxx"
 
 
 void InputEvent::KeyDown(int vKey)

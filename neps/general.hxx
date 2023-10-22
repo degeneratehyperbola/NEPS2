@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Globals.hxx"
-#include "InputSystem.hxx"
-#include "HookCallbacks.hxx"
-#include "GUI.hxx"
-#include "ScriptManager.hxx"
+#include "globals.hxx"
+#include "input_system.hxx"
+#include "hook_callbacks.hxx"
+#include "gui.hxx"
+#include "script_manager.hxx"
 
 
 // Basic NEPS functionality

@@ -1,9 +1,9 @@
 #pragma once
 
-#include <PCH.hpp>
+#include <pch.hpp>
 
-#include "SDK/interfaces/InputSystem.hxx"
-#include "SDK/interfaces/EngineClient.hxx"
+#include "interfaces/input_system.hxx"
+#include "interfaces/engine_client.hxx"
 
 
 namespace CS2

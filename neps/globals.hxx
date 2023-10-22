@@ -1,6 +1,6 @@
 #pragma once
 
-#include <PCH.hpp>
+#include <pch.hpp>
 
 
 inline HMODULE g_hModule; // General globals | Handle to this DLL
