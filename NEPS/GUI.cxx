@@ -71,7 +71,6 @@ void RenderScriptManagerWindow()
 
 		if (ImGui::Button("Load"))
 		{
-			SM::AcquireGIL _;
 			SM::TrackedScripts[selectedScript].Load();
 		}
 
