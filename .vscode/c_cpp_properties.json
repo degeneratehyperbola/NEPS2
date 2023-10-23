@@ -6,7 +6,8 @@
 			"compileCommands": "${config:cmake.buildDirectory}/compile_commands.json",
 			"includePath": [
 				"${default}",
-				"${workspaceFolder}/include"
+				"${workspaceFolder}/src/include",
+				"${workspaceFolder}/src"
 			]
 		}
 	],

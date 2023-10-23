@@ -17,6 +17,7 @@ namespace fs = std::filesystem;
 #include <vulkan/vulkan.hpp>
 
 // ImGui
+#define IMGUI_DEFINE_MATH_OPERATORS // Until I implement Vector2 types
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_dx11.h>
 #include <imgui/imgui_impl_vulkan.h>

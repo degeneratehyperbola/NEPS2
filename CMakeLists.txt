@@ -1,45 +1,52 @@
 cmake_minimum_required(VERSION 3.20)
 project(NEPS2)
 
-# Required packages
-find_package(Vulkan REQUIRED)
 
 # Enforce MSVC
 if (NOT MSVC)
 	message(FATAL_ERROR "Sowwey :c Only MSVC is supported currently ;w;")
 endif()
 
-# Set the precompiled header file
-set(PCH_FILE "pch.hpp")
-
-# Add root directory and used include directories as include search paths
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-# Add include dirs after find_package beautifully fails to
-include_directories(${Vulkan_INCLUDE_DIRS})
 
 ###########################################################################################
+# Required packages
+find_package(Vulkan REQUIRED)
+
 # Find source files recursively
+set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
 file(GLOB SOURCE_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/*.cxx
-	${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/*.c
+	${SOURCE_DIR}/*.cxx
+	${SOURCE_DIR}/*.cpp
+	${SOURCE_DIR}/*.c
 )
 
 file(GLOB_RECURSE SOURCE_FILES2
-	${CMAKE_CURRENT_SOURCE_DIR}/include/*.cxx
-	${CMAKE_CURRENT_SOURCE_DIR}/include/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/include/*.c
+	${SOURCE_DIR}/include/*.cxx
+	${SOURCE_DIR}/include/*.cpp
+	${SOURCE_DIR}/include/*.c
 	
-	${CMAKE_CURRENT_SOURCE_DIR}/cs2/*.cxx
-	${CMAKE_CURRENT_SOURCE_DIR}/neps/*.cxx
+	${SOURCE_DIR}/cs2/*.cxx
+	${SOURCE_DIR}/neps/*.cxx
 )
 
 list(APPEND SOURCE_FILES ${SOURCE_FILES2})
 
-# DLL target
+# Create target
 add_library(NEPS2_DLL SHARED ${SOURCE_FILES})
+
+# Set the precompiled header file
+target_precompile_headers(NEPS2_DLL PRIVATE
+	$<$<COMPILE_LANGUAGE:CXX>:${SOURCE_DIR}/pch.hpp>
+	$<$<COMPILE_LANGUAGE:C>:stddef.h>
+)
+
+# Add used include directories to include search paths
+target_include_directories(NEPS2_DLL PRIVATE ${SOURCE_DIR})
+target_include_directories(NEPS2_DLL PRIVATE ${SOURCE_DIR}/include)
+
+# Add include dirs after find_package beautifully fails to
+target_include_directories(NEPS2_DLL PRIVATE ${Vulkan_INCLUDE_DIRS})
 
 # Pre-processor macro definitions
 target_compile_definitions(NEPS2_DLL PRIVATE
@@ -58,11 +65,7 @@ if(MSVC)
 endif()
 
 # Set the C++ standard
-set_target_properties(NEPS2_DLL PROPERTIES
-	CXX_STANDARD 23
-	CXX_STANDARD_REQUIRED TRUE
-	LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/artefacts
-)
+target_compile_features(NEPS2_DLL PRIVATE cxx_std_23)
 
 # Link static libraries
 if(MSVC)
@@ -80,7 +83,7 @@ set_target_properties(NEPS2_DLL PROPERTIES
 
 ###########################################################################################
 # Tests
-find_package(Python REQUIRED)
+find_package(Python)
 enable_testing()
 set(TESTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests)
 
