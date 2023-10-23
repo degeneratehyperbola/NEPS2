@@ -5,6 +5,7 @@
 
 <!-- ![](https://img.shields.io/badge/Linux-FA2?style=for-the-badge&logo=linux&logoColor=black) -->
 ![](https://img.shields.io/badge/Windows-FA2?style=for-the-badge&logo=windows&logoColor=black)
+
 [![DISCORD](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/pwB3XBppVr)
 [![SUPPORT](https://img.shields.io/badge/support-this%20project-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](#support-this-project)
 
