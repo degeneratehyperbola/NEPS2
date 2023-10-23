@@ -74,3 +74,10 @@ set_target_properties(NEPS2_DLL PROPERTIES
 	OUTPUT_NAME "NEPS2"
 	SUFFIX ".dll"
 )
+
+# Tests
+find_package(Python REQUIRED)
+enable_testing()
+set(TESTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests)
+
+add_test(NAME Sanity COMMAND ${Python_EXECUTABLE} ${TESTS_DIR}/sanity.py)
