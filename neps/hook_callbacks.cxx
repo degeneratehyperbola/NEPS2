@@ -6,20 +6,22 @@
 #include "general.hxx"
 
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
+// DirectX11 | Dedicated render target to isolate our rendering from game's
+static ID3D11RenderTargetView* s_pRenderTarget;
 
 
 // DirectX11 | Called each render frame
 HRESULT WINAPI Callbacks::Present(IDXGISwapChain* pSwapChain, UINT syncInterval, UINT flags)
 {
+	ID3D11Device* pD3DDevice = nullptr;
+	pSwapChain->GetDevice(__uuidof(ID3D11Device), (void**)&pD3DDevice);
+	
+	ID3D11DeviceContext* pDeviceContext = nullptr;
+	pD3DDevice->GetImmediateContext(&pDeviceContext);
+
 	// WndProc hoking nd some ImGui setup needs to be done in the game's thread
 	if (!g_bImGuiInitialized)
 	{
-		ID3D11Device* pD3DDevice = nullptr;
-		ID3D11DeviceContext* pDeviceContext = nullptr;
-		pSwapChain->GetDevice(__uuidof(ID3D11Device), (void**)&pD3DDevice);
-		pD3DDevice->GetImmediateContext(&pDeviceContext);
-
 		if (!ImGui_ImplDX11_Init(pD3DDevice, pDeviceContext))
 			return NEPS::FatalError("Initialization", "Could not initialize ImGui DX11 frontend");
 
@@ -43,6 +45,25 @@ HRESULT WINAPI Callbacks::Present(IDXGISwapChain* pSwapChain, UINT syncInterval,
 		g_pOriginalWndProc = (WNDPROC)SetWindowLongPtrW(g_hWnd, GWLP_WNDPROC, (LONG_PTR)Callbacks::WndProc);
 	}
 
+	if (!s_pRenderTarget)
+	{
+		ID3D11Texture2D* backBuffer;
+		pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBuffer);
+
+		D3D11_RENDER_TARGET_VIEW_DESC desc;
+		desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+
+		pD3DDevice->CreateRenderTargetView(backBuffer, &desc, &s_pRenderTarget);
+
+		backBuffer->Release();
+	}
+
+	// Set to draw onto our render target
+	// It is necessary to do this before creating DX11 related backend objects in ImGui
+	// (ImGui_ImplDX11_NewFrame and subsequently ImGui_ImplDX11_CreateDeviceObjects)
+	pDeviceContext->OMSetRenderTargets(1, &s_pRenderTarget, nullptr);
+
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
@@ -58,6 +79,12 @@ HRESULT WINAPI Callbacks::Present(IDXGISwapChain* pSwapChain, UINT syncInterval,
 // DirectX11 | Called when the resolution changes and device needs resetting
 HRESULT WINAPI Callbacks::ResizeBuffers(IDXGISwapChain* pSwapChain, UINT bufferCount, UINT w, UINT h, DXGI_FORMAT newFormat, UINT flags)
 {
+	if (s_pRenderTarget)
+	{
+		s_pRenderTarget->Release();
+		s_pRenderTarget = nullptr;
+	}
+
 	if (g_bImGuiInitialized)
 		ImGui_ImplDX11_InvalidateDeviceObjects(); // Device objects are recreated at the next ImGui_ImplDX11_NewFrame call
 
