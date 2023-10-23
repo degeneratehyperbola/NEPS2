@@ -19,6 +19,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 # Add include dirs after find_package beautifully fails to
 include_directories(${Vulkan_INCLUDE_DIRS})
 
+###########################################################################################
 # Find source files recursively
 file(GLOB SOURCE_FILES
 	${CMAKE_CURRENT_SOURCE_DIR}/*.cxx
@@ -60,6 +61,7 @@ endif()
 set_target_properties(NEPS2_DLL PROPERTIES
 	CXX_STANDARD 23
 	CXX_STANDARD_REQUIRED TRUE
+	LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/artefacts
 )
 
 # Link static libraries
@@ -75,6 +77,8 @@ set_target_properties(NEPS2_DLL PROPERTIES
 	SUFFIX ".dll"
 )
 
+
+###########################################################################################
 # Tests
 find_package(Python REQUIRED)
 enable_testing()
