@@ -6,7 +6,7 @@
 <!-- ![](https://img.shields.io/badge/Linux-FA2?style=for-the-badge&logo=linux&logoColor=black) -->
 ![](https://img.shields.io/badge/Windows-FA2?style=for-the-badge&logo=windows&logoColor=black)
 [![DISCORD](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/pwB3XBppVr)
-[![SUPPORT](https://img.shields.io/badge/support-this%20project-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](#support-this-project-💖)
+[![SUPPORT](https://img.shields.io/badge/support-this%20project-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](#support-this-project)
 
 The legend returns
 
@@ -16,7 +16,7 @@ The legend returns
 
 <div align=center>
 
-## Support this project 💖
+## Support this project
 
 [![ETHEREUM](https://img.shields.io/badge/Ethereum-3C3C3D?style=for-the-badge&logo=Ethereum&logoColor=white)](https://degeneratehyperbola.github.io/display-text/?Etherium%20Mainnet%20💖&&0xC2099607c024F533718C493Da53B38577157BA8f)
 [![POLKADOT](https://img.shields.io/badge/polkadot-E6007A?style=for-the-badge&logo=polkadot&logoColor=000)](https://degeneratehyperbola.github.io/display-text/?Polkadot%20Relay%20Chain%20💕&&13sKWjRxNJpBdC2PH3bWsXvKSSPKDgYF8wLwtVnbwZ5cqhhR)
@@ -37,4 +37,4 @@ The legend returns
 - Pull request should contain only one inseparable unit of change
 	- If you can separate your PR into several ones, I would appreciate if you do it 💕
 
-[![SUPPORT](https://img.shields.io/badge/support-this%20project-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](#support-this-project-💖)
+[![SUPPORT](https://img.shields.io/badge/support-this%20project-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](#support-this-project)
