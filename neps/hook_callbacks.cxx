@@ -55,7 +55,7 @@ HRESULT WINAPI Callbacks::Present(IDXGISwapChain* pSwapChain, UINT syncInterval,
 	return g_hkPresent.CallOriginal<HRESULT>(pSwapChain, syncInterval, flags);
 }
 
-// DirectX11 | Called when the game's window is resized
+// DirectX11 | Called when the resolution changes and device needs resetting
 HRESULT WINAPI Callbacks::ResizeBuffers(IDXGISwapChain* pSwapChain, UINT bufferCount, UINT w, UINT h, DXGI_FORMAT newFormat, UINT flags)
 {
 	if (g_bImGuiInitialized)
@@ -64,7 +64,10 @@ HRESULT WINAPI Callbacks::ResizeBuffers(IDXGISwapChain* pSwapChain, UINT bufferC
 	return g_hkResizeBuffers.CallOriginal<HRESULT>(pSwapChain, bufferCount, w, h, newFormat, flags);
 }
 
-// Calls are event-based (e.g. keypress, clipboard action)
+// Windows | No header with this declaration for some reason
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
+
+// Windows | Calls are event-based (e.g. keypress, clipboard action)
 LRESULT WINAPI Callbacks::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
